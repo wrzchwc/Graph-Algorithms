@@ -43,17 +43,20 @@ int main() {
                             fstream file;       // handle for .txt file
                             string tmp;         // used for reading from file
                             string filepath;    // path to the file, where graph parameters are stored
-                            cout<<"WARNING! FILE MUST BE IN THE SAME FOLDER AS EXECUTABLE FILE."<<endl;
-                            cout<<"NAME OF THE FILE SHOULD BE ENTERED LIKE THIS: name.extension"<<endl;
-                            cout<<"Name of the file: ";
-                            cin>>filepath;
-                            if(file.good()){
+                            cout << "WARNING! FILE MUST BE IN THE SAME FOLDER AS EXECUTABLE FILE." << endl;
+                            cout << "NAME OF THE FILE SHOULD BE ENTERED LIKE THIS: name.extension" << endl;
+                            cout << "Name of the file: ";
+                            cin >> filepath;
+                            if (file.good()) {
                                 //todo: reading and generating matrix
                                 //todo: reading and generating list
+                            } else {
+                                cout << "Error! Name of the file incorrect or file does not exist. Try again." << endl;
                             }
-                            else{
-                                cout<<"Error! Name of the file incorrect or file does not exist."<<endl;
-                            }
+                        }
+                            break;
+                        default: {
+                            cout << "Incorrect choice! Try again." << endl;
                         }
                             break;
                     }

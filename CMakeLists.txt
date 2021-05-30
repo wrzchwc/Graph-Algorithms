@@ -3,4 +3,5 @@ project(PDBFK)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(PDBFK Main.cpp)
+add_executable(PDBFK Main.cpp priority_queue/PriorityQueue.cpp priority_queue/PriorityQueue.h)
+add_executable(test test.cpp priority_queue/PriorityQueue.h priority_queue/PriorityQueue.cpp)
