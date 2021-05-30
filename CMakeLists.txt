@@ -3,4 +3,4 @@ project(PDBFK)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(PDBFK main.cpp)
+add_executable(PDBFK Main.cpp)
