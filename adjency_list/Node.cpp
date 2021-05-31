@@ -4,9 +4,8 @@
 
 #include "Node.h"
 
-Node::Node(int id) {
-    higher = nullptr;
-    lower = nullptr;
+Node::Node(int id, Node *higher) {
+    this->higher = higher;
     this->id = id;
 }
 
@@ -14,12 +13,8 @@ Node *Node::getHigher() const {
     return higher;
 }
 
-void Node::setHigher(Node *higher) {
-    Node::higher = higher;
-}
-
-Node *Node::getLower() const {
-    return lower;
+void Node::setHigher(Node *node) {
+    Node::higher = node;
 }
 
 int Node::getID() const {
@@ -32,10 +27,5 @@ void Node::setID(int id) {
 
 Node::~Node() {
     higher = nullptr;
-    lower = nullptr;
     id = 0;
-}
-
-void Node::setLower(Node *lower) {
-    Node::lower = lower;
 }

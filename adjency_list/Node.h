@@ -10,13 +10,12 @@ class Node {
 protected:
     //node added before this one
     Node *higher;
-    //node added after this one
-    Node *lower;
+
     //id of the node
     int id;
 public:
     //constructor
-    explicit Node(int id);
+    explicit Node(int id, Node *higher = nullptr);
 
     //destructor
     virtual ~Node();
@@ -25,13 +24,7 @@ public:
     [[nodiscard]] Node *getHigher() const;
 
     //sets node added before this one
-    void setHigher(Node *higher);
-
-    //returns node added after this one
-    [[nodiscard]] Node *getLower() const;
-
-    //sets node added after this one
-    void setLower(Node *lower);
+    void setHigher(Node *node);
 
     //gets id of the node
     [[nodiscard]] int getID() const;

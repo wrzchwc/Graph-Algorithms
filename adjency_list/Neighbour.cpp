@@ -4,11 +4,9 @@
 
 #include "Neighbour.h"
 
-Neighbour::Neighbour(int id, int edgeWeight) : Node(id) {
-    higher = nullptr;
-    lower = nullptr;
-    this->edgeWeight = edgeWeight;
-
+Neighbour::Neighbour(int id, int weight) : Node(id) {
+    this->lower = nullptr;
+    this->edgeWeight = weight;
 }
 
 Neighbour::~Neighbour() {
@@ -22,6 +20,20 @@ int Neighbour::getEdgeWeight() const {
     return edgeWeight;
 }
 
-void Neighbour::setEdgeWeight(int edgeWeight) {
-    Neighbour::edgeWeight = edgeWeight;
+void Neighbour::setEdgeWeight(int weight) {
+    Neighbour::edgeWeight = weight;
 }
+
+Neighbour *Neighbour::getLower() const {
+    return lower;
+}
+
+void Neighbour::setLower(Neighbour *lower) {
+    Neighbour::lower = lower;
+}
+
+
+
+
+
+

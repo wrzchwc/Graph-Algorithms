@@ -9,20 +9,25 @@
 
 class Neighbour : public Node {
 private:
-    //weight of edge between containsVertex and neighbour
+    //weight of edge between containsVertex and lower
     int edgeWeight;
+    Neighbour *lower;
 public:
     //constructor
-    Neighbour(int id, int edgeWeight);
+    Neighbour(int id, int weight);
 
     //destructor
     ~Neighbour() override;
 
-    //returns weight of edge between neighbour and containsVertex
+    [[nodiscard]] Neighbour *getLower() const;
+
+    void setLower(Neighbour *lower);
+
     [[nodiscard]] int getEdgeWeight() const;
 
-    //sets weight of edge between neighbour and containsVertex
     void setEdgeWeight(int edgeWeight);
+
+
 };
 
 

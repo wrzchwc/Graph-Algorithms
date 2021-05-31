@@ -6,6 +6,7 @@
 #define PDBFK_VERTEX_H
 
 #include "Node.h"
+#include "Neighbour.h"
 
 class Vertex : public Node {
 private:
@@ -13,24 +14,30 @@ private:
     Vertex *previous;
     // succeeding containsVertex
     Vertex *next;
+
+    Neighbour *lower;
 public:
     //constructor
-    explicit Vertex(int id);
+    explicit Vertex(int id, Node *higher = nullptr, Vertex *previous = nullptr);
 
     //destructor
     ~Vertex() override;
 
     //returns pointer to the previous containsVertex
-    [[nodiscard]] Vertex * getPrevious() const;
+    [[nodiscard]] Vertex *getPrevious() const;
 
     //sets pointer to the previous containsVertex
-    void setPrevious(Vertex *previous);
+    void setPrevious(Vertex *vertex);
 
     //returns pointer to the next containsVertex
-    [[nodiscard]] Vertex * getNext() const;
+    [[nodiscard]] Vertex *getNext() const;
 
     //sets pointer to the next containsVertex
-    void setNext(Vertex *next);
+    void setNext(Vertex *vertex);
+
+    [[nodiscard]] Neighbour *getLower() const;
+
+    void setLower(Neighbour *neighbour);
 };
 
 

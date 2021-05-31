@@ -18,6 +18,8 @@ private:
 
     void setLast(Vertex *vertex);
 
+    static void removeNeighbours(Vertex *vertex);
+
 
 public:
     //constructor
@@ -38,8 +40,11 @@ public:
     //removes all the elements on the list
     void removeAll();
 
-    //removes the last element
+    //removes the last vertex
     void removeVertex();
+
+    //adds lower of the specified vertex
+    void addNeighbour(int vertexID, int id, int edgeWeight);
 };
 
 

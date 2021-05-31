@@ -14,13 +14,13 @@ AdjacencyList::AdjacencyList() {
 }
 
 void AdjacencyList::addVertex(int id) {
-    auto *vertex = new Vertex(id);
     if (!(first && last)) {
+        auto *vertex = new Vertex(id);
         setFirst(vertex);
         setLast(vertex);
     } else {
+        auto *vertex = new Vertex(id, nullptr, last);
         last->setNext(vertex);
-        vertex->setPrevious(last);
         setLast(vertex);
     }
     size++;
@@ -37,7 +37,13 @@ void AdjacencyList::setLast(Vertex *vertex) {
 void AdjacencyList::show() const {
     auto *tmp = first;
     while (tmp) {
-        cout << tmp->getID() << " ";
+        auto *neighbour = tmp->getLower();
+        cout << "[V:" << tmp->getID() << "]";
+        while (neighbour) {
+            cout << "-[" << neighbour->getID() << ":" << neighbour->getEdgeWeight() << "]";
+            neighbour = neighbour->getLower();
+        }
+        cout << endl;
         tmp = tmp->getNext();
     }
     cout << endl;
@@ -56,23 +62,35 @@ void AdjacencyList::removeVertex() {
     }
         //1 containsVertex on the list
     else if (first == last) {
-        setFirst(nullptr);
-        setLast(nullptr);
-        //todo: removing neighbours
+        if (first->getLower())
+            removeNeighbours(first);
         first->setLower(nullptr);
         delete first;
+        setFirst(nullptr);
+        setLast(nullptr);
     }
-        //more than 1 containsVertex one the list
+        //more than 1 vertex one the list
     else {
-        auto *tmp = last->getPrevious();
-        tmp->setNext(nullptr);
+        auto *penultimate = last->getPrevious();
+        penultimate->setNext(nullptr);
         last->setPrevious(nullptr);
-        //todo: removing neighbours
+        if (last->getLower())
+            removeNeighbours(last);
         last->setLower(nullptr);
         delete last;
-        setLast(tmp);
+        setLast(penultimate);
     }
     size--;
+}
+
+void AdjacencyList::removeNeighbours(Vertex *vertex) {
+    auto *tmp = vertex->getLower();
+    auto *pmt = tmp;
+    while (tmp) {
+        tmp = tmp->getLower();
+        delete pmt;
+        pmt = tmp;
+    }
 }
 
 Vertex *AdjacencyList::containsVertex(int id) {
@@ -88,3 +106,22 @@ Vertex *AdjacencyList::containsVertex(int id) {
 AdjacencyList::~AdjacencyList() {
     removeAll();
 }
+
+void AdjacencyList::addNeighbour(int vertexID, int id, int edgeWeight) {
+    auto *neighbour = new Neighbour(id, edgeWeight);
+    auto *tmp = first;
+    while (tmp->getID() != vertexID)
+        tmp = tmp->getNext();
+    if (tmp->getLower()) {
+        auto *tmp2 = tmp->getLower();
+        while (tmp2->getLower())
+            tmp2 = tmp2->getLower();
+        tmp2->setLower(neighbour);
+        neighbour->setHigher(tmp2);
+    } else {
+        tmp->setLower(neighbour);
+        neighbour->setHigher(tmp);
+    }
+}
+
+
