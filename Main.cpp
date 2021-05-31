@@ -35,8 +35,8 @@ int main() {
                         }
                             break;
                         case 1: {
-                            //todo: generating graph as matrix
-                            //todo: generating graph as list
+                            // todo: generating graph as matrix
+                            // todo: generating graph as list
                         }
                             break;
                         case 2: {

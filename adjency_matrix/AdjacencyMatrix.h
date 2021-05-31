@@ -8,7 +8,7 @@
 
 class AdjacencyMatrix {
 private:
-    //dynamic two-dimensional array containing data
+    //dynamic two-dimensional array containing id
     int **matrix;
     //size*size is the actual size of matrix
     int size;
@@ -19,10 +19,10 @@ public:
     //destructor
     virtual ~AdjacencyMatrix();
 
-    //sets data in a specified row and column
+    //sets id in a specified row and column
     void setData(int data, int row, int column);
 
-    //returns data stored in a specified row and column
+    //returns id stored in a specified row and column
     int getData(int row, int column);
 
     //returns square root of the size

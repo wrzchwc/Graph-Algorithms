@@ -13,7 +13,7 @@ struct PrimDijkstra {
 
 class PriorityQueue {
 private:
-    //dynamic dynamic array storing data added to the queue
+    //dynamic dynamic array storing id added to the queue
     PrimDijkstra *queue;
     //size of the binary queue
     int size;
@@ -30,16 +30,16 @@ public:
     //destructor
     virtual ~PriorityQueue();
 
-    //adds specified data to queue
+    //adds specified id to queue
     void add(PrimDijkstra item);
 
     //removes the root of the queue
     void remove();
 
-    //removes all data in the queue
+    //removes all id in the queue
     void removeAll();
 
-    //returns true if queue contains specified data, otherwise returns false
+    //returns true if queue containsVertex specified id, otherwise returns false
     bool contains(int id);
 
     //prints content of the queue
