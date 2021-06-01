@@ -5,8 +5,11 @@
 #ifndef PDBFK_ADJACENCYLIST_H
 #define PDBFK_ADJACENCYLIST_H
 
+#include <iostream>
 #include "Node.h"
 #include "Vertex.h"
+
+using namespace std;
 
 class AdjacencyList {
 private:
@@ -23,6 +26,8 @@ private:
 public:
     //constructor
     AdjacencyList();
+
+    AdjacencyList(const string &filepath, const string &delimiter, bool directed);
 
     //destructor
     virtual ~AdjacencyList();

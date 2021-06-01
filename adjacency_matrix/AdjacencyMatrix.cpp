@@ -4,23 +4,10 @@
 #include <iostream>
 #include <string>
 #include "AdjacencyMatrix.h"
+#include "../Main.h"
 
 
 using namespace std;
-
-int *interpret(string line, const string& delimiter, int number) {
-    //todo: remove this and uncomment this function in Main.cpp
-    int *tmp = new int[number], i = 0;
-    size_t position;
-    string token;
-    while ((position = line.find(delimiter)) != string::npos) {
-        token = line.substr(0, position);
-        tmp[i++] = atoi(token.c_str());
-        line.erase(0, position + delimiter.length());
-    }
-    tmp[i] = atoi(line.c_str());
-    return tmp;
-}
 
 AdjacencyMatrix::AdjacencyMatrix(int size) {
     this->size = size;
@@ -35,8 +22,9 @@ void AdjacencyMatrix::setData(int data, int row, int column) {
 void AdjacencyMatrix::show() {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++)
-            cout << matrix[i][j] << " ";
+            matrix[i][j] == INT_MAX ? cout << "X" : cout << matrix[i][j];
         cout << endl;
+
     }
 }
 
@@ -57,7 +45,7 @@ int AdjacencyMatrix::getSize() const {
     return size;
 }
 
-AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter) {
+AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed) {
     //todo: directed vs undirected graph
     fstream file;
     string tmp;
@@ -66,7 +54,7 @@ AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter
 
     file.open(filepath, ios::in);
     getline(file, tmp);
-    //parameters[0] - edges parameters[1] - vertexes parameters[2] - start parameters[3] - end
+    //parameters[0]-edges parameters[1]-vertexes parameters[2]-start parameters[3]-end
     int *parameters = interpret(tmp, delimiter, 4);
 
     initializeMatrix(parameters[1]);
@@ -75,7 +63,8 @@ AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter
         //edge[0] - start edge[1] - end edge [2] - weight
         int *edge = interpret(tmp, delimiter, 3);
         setData(edge[2], edge[0], edge[1]);
-        setData(edge[2], edge[1], edge[0]);
+        if (!directed)
+            setData(edge[2], edge[1], edge[0]);
     }
 
     file.close();

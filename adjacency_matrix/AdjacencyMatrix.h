@@ -26,7 +26,7 @@ public:
     explicit AdjacencyMatrix(int size);
 
     //constructor loading graph from file
-    explicit AdjacencyMatrix(const string &filepath, const string& delimiter);
+    explicit AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed);
 
     //destructor
     virtual ~AdjacencyMatrix();

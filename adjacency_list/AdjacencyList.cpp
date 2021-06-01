@@ -3,7 +3,11 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "AdjacencyList.h"
+#include "../Main.h"
+
 
 using namespace std;
 
@@ -122,6 +126,32 @@ void AdjacencyList::addNeighbour(int vertexID, int id, int edgeWeight) {
         tmp->setLower(neighbour);
         neighbour->setHigher(tmp);
     }
+}
+
+AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bool directed) {
+    //todo: directed vs undirected graph
+    fstream file;
+    string tmp;
+    this->size = 0;
+    this->first = nullptr;
+    this->last = nullptr;
+
+    file.open(filepath, ios::in);
+    getline(file, tmp);
+    //parameters[0]-edges parameters[1]-vertexes parameters[2]-start parameters[3]-end
+    int *parameters = interpret(tmp, delimiter, 4);
+    for (int i = 0; i < parameters[1]; i++)
+        addVertex(i);
+    while (getline(file, tmp)) {
+        //edge[0] - start edge[1] - end edge [2] - weight
+        int *edge = interpret(tmp, delimiter, 3);
+        addNeighbour(edge[0], edge[1], edge[2]);
+        if (!directed)
+            addNeighbour(edge[1], edge[0], edge[2]);
+    }
+
+    file.close();
+
 }
 
 
