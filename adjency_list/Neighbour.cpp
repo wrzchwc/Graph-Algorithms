@@ -20,10 +20,6 @@ int Neighbour::getEdgeWeight() const {
     return edgeWeight;
 }
 
-void Neighbour::setEdgeWeight(int weight) {
-    Neighbour::edgeWeight = weight;
-}
-
 Neighbour *Neighbour::getLower() const {
     return lower;
 }

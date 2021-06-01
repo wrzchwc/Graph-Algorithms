@@ -29,8 +29,6 @@ public:
     //gets id of the node
     [[nodiscard]] int getID() const;
 
-    //sets id of the node
-    void setID(int id);
 };
 
 

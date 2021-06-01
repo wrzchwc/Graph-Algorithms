@@ -19,14 +19,14 @@ public:
     //destructor
     ~Neighbour() override;
 
+    //returns neighbour added after this one
     [[nodiscard]] Neighbour *getLower() const;
 
+    //sets neighbour after this one
     void setLower(Neighbour *lower);
 
+    //returns weight of the edge between vertex and this neighbour
     [[nodiscard]] int getEdgeWeight() const;
-
-    void setEdgeWeight(int edgeWeight);
-
 
 };
 

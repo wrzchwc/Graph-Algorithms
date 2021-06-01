@@ -21,10 +21,6 @@ int Node::getID() const {
     return id;
 }
 
-void Node::setID(int id) {
-    Node::id = id;
-}
-
 Node::~Node() {
     higher = nullptr;
     id = 0;

@@ -20,7 +20,6 @@ private:
 
     static void removeNeighbours(Vertex *vertex);
 
-
 public:
     //constructor
     AdjacencyList();
@@ -29,7 +28,7 @@ public:
     virtual ~AdjacencyList();
 
     //returns pointer to containsVertex with specified id on the list, otherwise returns nullptr
-    Vertex * containsVertex(int id);
+    Vertex *containsVertex(int id);
 
     //adds new containsVertex
     void addVertex(int id);

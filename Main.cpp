@@ -1,11 +1,28 @@
 #include <iostream>
 #include <fstream>
+#include "Main.h"
+#include "adjency_matrix/AdjacencyMatrix.h"
 
 int input;              // choice of menu option
 bool running = true;    //controls the main loop of the program
 bool mode = true;       //controls loop of specified mode
 bool algorithm = true;  //controls loop of given structure while working in specified mode
 using namespace std;
+
+//todo: remove this function from AdjacencyMatrix.cpp and AdjacencyList.cpp and required includes in these files
+//todo: uncomment this function
+//int *interpret(string line, const string &delimiter, int number) {
+//    int *tmp = new int[number], i = 0;
+//    size_t position;
+//    string token;
+//    while ((position = line.find(delimiter)) != string::npos) {
+//        token = line.substr(0, position);
+//        tmp[i++] = atoi(token.c_str());
+//        line.erase(0, position + delimiter.length());
+//    }
+//    tmp[i] = atoi(line.c_str());
+//    return tmp;
+//}
 
 int main() {
     cout << "--------------------------------DS&CC Project--------------------------------" << endl;
@@ -23,6 +40,7 @@ int main() {
                 break;
             case 1: {
                 while (mode) {
+                    AdjacencyMatrix *matrix;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Generate graph" << endl;
                     cout << "[2] Read graph from the file" << endl;
@@ -41,14 +59,14 @@ int main() {
                             break;
                         case 2: {
                             fstream file;       // handle for .txt file
-                            string tmp;         // used for reading from file
                             string filepath;    // path to the file, where graph parameters are stored
                             cout << "WARNING! FILE MUST BE IN THE SAME FOLDER AS EXECUTABLE FILE." << endl;
                             cout << "NAME OF THE FILE SHOULD BE ENTERED LIKE THIS: name.extension" << endl;
                             cout << "Name of the file: ";
                             cin >> filepath;
                             if (file.good()) {
-                                //todo: reading and generating matrix
+                                matrix=new AdjacencyMatrix(filepath," ");
+                                matrix->show();
                                 //todo: reading and generating list
                             } else {
                                 cout << "Error! Name of the file incorrect or file does not exist. Try again." << endl;
@@ -125,7 +143,9 @@ int main() {
 
                         }
                     }
+//                   todo: delete matrix;
                 }
+
             }
                 break;
             case 2: {

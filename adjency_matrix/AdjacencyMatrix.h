@@ -5,6 +5,10 @@
 #ifndef PDBFK_ADJACENCYMATRIX_H
 #define PDBFK_ADJACENCYMATRIX_H
 
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 class AdjacencyMatrix {
 private:
@@ -12,9 +16,17 @@ private:
     int **matrix;
     //size*size is the actual size of matrix
     int size;
+
+    //initialises matrix
+    void initializeMatrix(int matrixSize);
+
 public:
     //constructor
+    //todo: constructor which generates random graph directed or undirected
     explicit AdjacencyMatrix(int size);
+
+    //constructor loading graph from file
+    explicit AdjacencyMatrix(const string &filepath, const string& delimiter);
 
     //destructor
     virtual ~AdjacencyMatrix();
@@ -30,6 +42,7 @@ public:
 
     //displays content of the martrix
     void show();
+
 
 };
 

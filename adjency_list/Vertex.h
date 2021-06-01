@@ -35,8 +35,10 @@ public:
     //sets pointer to the next containsVertex
     void setNext(Vertex *vertex);
 
+    //returns firstly added neighbour of the vertex
     [[nodiscard]] Neighbour *getLower() const;
 
+    //sets the first neighbour of the vertex
     void setLower(Neighbour *neighbour);
 };
 
