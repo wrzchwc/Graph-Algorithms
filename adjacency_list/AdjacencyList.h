@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Node.h"
 #include "Vertex.h"
+#include "../adjacency_matrix/AdjacencyMatrix.h"
 
 using namespace std;
 
@@ -26,6 +27,9 @@ private:
 public:
     //constructor
     AdjacencyList();
+
+    //constructor using matrix
+    explicit AdjacencyList(AdjacencyMatrix* matrix);
 
     AdjacencyList(const string &filepath, const string &delimiter, bool directed);
 
@@ -48,7 +52,7 @@ public:
     void removeVertex();
 
     //adds lower of the specified vertex
-    void addNeighbour(int vertexID, int id, int edgeWeight);
+    void addNeighbour(int vertexID, int neighbourID, int edgeWeight);
 };
 
 

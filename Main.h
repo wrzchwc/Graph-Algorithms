@@ -8,4 +8,5 @@
 
 using namespace std;
 int* interpret(string line, const string& delimiter, int number);
+int random_number(int minimum, int maximum);
 #endif //PDBFK_MAIN_H

@@ -21,9 +21,10 @@ private:
     void initializeMatrix(int matrixSize);
 
 public:
+    AdjacencyMatrix();
+
     //constructor
-    //todo: constructor which generates random graph directed or undirected
-    explicit AdjacencyMatrix(int size);
+    explicit AdjacencyMatrix(int size, bool random, bool directed, double density, int maxWeight);
 
     //constructor loading graph from file
     explicit AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed);

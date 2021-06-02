@@ -9,10 +9,42 @@
 
 using namespace std;
 
-AdjacencyMatrix::AdjacencyMatrix(int size) {
+AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double density, int maxWeight) {
     this->size = size;
     this->matrix = nullptr;
     initializeMatrix(size);
+    auto edges_max = ((double) size * ((double) size - 1.0)) / 2.0;
+    auto edges_min = (double) size - 1.0;
+    double tmp = directed ? (edges_min * 0.5) / edges_max : edges_min / edges_max;
+    if (density >= edges_min / edges_max && random) {
+        //consistent graph
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                if (column - row == 1) {
+                    auto randomNumber = random_number(0, maxWeight);
+                    matrix[row][column] = randomNumber;
+                    if (!directed)
+                        matrix[column][row] = randomNumber;
+                }
+            }
+        }
+        //achieving density
+        while (tmp  < density) {
+            int random_row = random_number(0, size - 1);
+            int random_column = random_number(0, size - 1);
+            if (random_row != random_column && matrix[random_row][random_column] == INT_MAX) {
+                auto random_weight = random_number(0, maxWeight);
+                setData(random_weight, random_row, random_column);
+                tmp += 0.5 / edges_max;
+                if (!directed) {
+                    tmp += 0.5 / edges_max;
+                    setData(random_weight, random_column, random_row);
+                }
+            }
+        }
+    } else
+        cout << "Impossible to achieve density of " << density << " with number of vertexes equal " << size << endl;
+
 }
 
 void AdjacencyMatrix::setData(int data, int row, int column) {
@@ -22,9 +54,8 @@ void AdjacencyMatrix::setData(int data, int row, int column) {
 void AdjacencyMatrix::show() {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++)
-            matrix[i][j] == INT_MAX ? cout << "X" : cout << matrix[i][j];
+            matrix[i][j] == INT_MAX ? cout << "X " : cout << matrix[i][j] << " ";
         cout << endl;
-
     }
 }
 
@@ -46,7 +77,6 @@ int AdjacencyMatrix::getSize() const {
 }
 
 AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed) {
-    //todo: directed vs undirected graph
     fstream file;
     string tmp;
     this->size = 0;
@@ -78,4 +108,9 @@ void AdjacencyMatrix::initializeMatrix(int matrixSize) {
     for (int i = 0; i < matrixSize; i++)
         for (int j = 0; j < matrixSize; j++)
             matrix[i][j] = INT_MAX;
+}
+
+AdjacencyMatrix::AdjacencyMatrix() {
+    size = 0;
+    matrix = nullptr;
 }

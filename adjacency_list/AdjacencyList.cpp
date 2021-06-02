@@ -111,8 +111,8 @@ AdjacencyList::~AdjacencyList() {
     removeAll();
 }
 
-void AdjacencyList::addNeighbour(int vertexID, int id, int edgeWeight) {
-    auto *neighbour = new Neighbour(id, edgeWeight);
+void AdjacencyList::addNeighbour(int vertexID, int neighbourID, int edgeWeight) {
+    auto *neighbour = new Neighbour(neighbourID, edgeWeight);
     auto *tmp = first;
     while (tmp->getID() != vertexID)
         tmp = tmp->getNext();
@@ -152,6 +152,18 @@ AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bo
 
     file.close();
 
+}
+
+AdjacencyList::AdjacencyList(AdjacencyMatrix *matrix) {
+    this->size = 0;
+    first = nullptr;
+    last = nullptr;
+    for (int i = 0; i < matrix->getSize(); i++)
+        addVertex(i);
+    for (int row = 0; row < matrix->getSize(); row++)
+        for (int column = 0; column < matrix->getSize(); column++)
+            if (matrix->getData(row, column) != INT_MAX)
+                addNeighbour(row, column, matrix->getData(row, column));
 }
 
 

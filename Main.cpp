@@ -1,15 +1,12 @@
 #include <iostream>
+#include <random>
 #include "Main.h"
 #include "adjacency_matrix/AdjacencyMatrix.h"
 #include "adjacency_list/AdjacencyList.h"
 
-int input;                  // choice of menu option
-bool running = true;        //controls the main loop of the program
-bool mode = true;           //controls loop of specified mode
-bool algorithm = false;     //controls loop of given structure while working in specified mode
+
 using namespace std;
 
-//todo: remove this function from AdjacencyMatrix.cpp and AdjacencyList.cpp and required includes in these files
 int *interpret(string line, const string &delimiter, int number) {
     int *tmp = new int[number], i = 0;
     size_t position;
@@ -23,9 +20,20 @@ int *interpret(string line, const string &delimiter, int number) {
     return tmp;
 }
 
+int random_number(int minimum, int maximum) {
+    random_device device;
+    mt19937 generator(device());
+    uniform_int_distribution<> distribution(minimum, maximum);
+    return distribution(generator);
+}
+
 int main() {
     cout << "--------------------------------DS&CC Project--------------------------------" << endl;
     cout << "Jakub Wierzchowiec, 06.2021" << endl;
+    int input;                  // choice of menu option
+    bool running = true;        //controls the main loop of the program
+    bool mode = true;           //controls loop of specified mode
+    bool algorithm = true;     //controls loop of given structure while working in specified mode
     while (running) {
         cout << "[0] Quit" << endl;
         cout << "[1] Control mode" << endl;
@@ -38,12 +46,12 @@ int main() {
             }
                 break;
             case 1: {
-                auto *matrix = new AdjacencyMatrix(0);
+                auto *matrix = new AdjacencyMatrix();
                 auto *list = new AdjacencyList();
                 while (mode) {
                     // path to the file, where graph parameters are stored
                     string filepath, delimiter = " ";
-                    bool load = false;
+                    bool load = false, KPUnavailable = false;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Generate graph" << endl;
                     cout << "[2] Read graph from the file" << endl;
@@ -56,8 +64,29 @@ int main() {
                         }
                             break;
                         case 1: {
-                            // todo: generating graph as matrix
-                            // todo: generating graph as list
+                            load = false;
+                            int size, maxWeight;
+                            float density;
+                            bool directed = false;
+                            cout << "Number of vertexes: ";
+                            cin >> size;
+                            cout << "Density (edges/edges_max): ";
+                            cin >> density;
+                            cout << "Maximum weight of edge: ";
+                            cin >> maxWeight;
+                            cout << "Directed graph (1-yes, 0-no): ";
+                            cin >> input;
+                            if (input == 0) {
+                                directed = false;
+                                KPUnavailable = false;
+                            } else {
+                                directed = true;
+                                KPUnavailable = true;
+                            }
+                            matrix = new AdjacencyMatrix(size, true, directed, density, maxWeight);
+                            list = new AdjacencyList(matrix);
+                            algorithm = true;
+                            cout << "Graph generation successful." << endl;
                         }
                             break;
                         case 2: {
@@ -71,7 +100,7 @@ int main() {
                             if (file.good()) {
                                 cout << "Filepath saved. No errors." << endl;
                                 algorithm = true;
-                                load = false;
+                                load = true;
                             } else {
                                 cout << "Error! File does not exist or its name is incorrect." << endl;
                                 algorithm = false;
@@ -88,7 +117,7 @@ int main() {
                     }
                     while (algorithm) {
                         cout << "--------------------------------Control mode--------------------------------" << endl;
-                        cout << "[0] Return to menu         |" << endl;
+                        cout << "[0] Return to menu" << endl;
                         cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
                         cout << "[2] Prim Algorithm         | list" << endl; //undirected
                         cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
@@ -99,10 +128,9 @@ int main() {
                         cout << "[8] Kruskal Algorithm      | list" << endl; //undirected
                         cout << "> ";
                         cin >> input;
-                        if(!load){
-                            if (input == 0)
-                                algorithm = false;
-                            else if (input == 1 || input == 2 || input == 7 || input == 8) {
+                        input == 0 ? algorithm = false : algorithm = true;
+                        if (load && input > 0) {
+                            if (input == 1 || input == 2 || input == 7 || input == 8) {
                                 list = new AdjacencyList(filepath, delimiter, false);
                                 matrix = new AdjacencyMatrix(filepath, delimiter, false);
                             } else if (input == 3 || input == 4 || input == 5 || input == 6) {
@@ -112,45 +140,96 @@ int main() {
                                 cout << "Incorrect choice! Try again." << endl;
                             if (input > 0)
                                 input % 2 == 1 ? matrix->show() : list->show();
+                        } else if (input > 0) {
+                            if (input < 9 && input % 2 == 1)
+                                matrix->show();
+                            else if (input < 9)
+                                list->show();
                         }
-                        else{
-
-                        }
-
                         switch (input) {
                             case 0: {
                                 algorithm = false;
                             }
+                                break;
                             case 1: {
-                                cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
+                                if (!KPUnavailable || load) {
+                                    cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
+                                } else {
+                                    cout << "Error! Mode unavailable because directed graph was generated. " << endl;
+                                    cout << "Return to menu and generate undirected graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 2: {
-                                cout << "[2] Prim Algorithm         | list" << endl; //undirected
+                                if (!KPUnavailable || load) {
+                                    cout << "[2] Prim Algorithm         | list" << endl; //undirected
+                                } else {
+                                    cout << "Error! Mode unavailable because directed graph was generated. " << endl;
+                                    cout << "Return to menu and generate undirected graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 3: {
-                                cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
+                                if (KPUnavailable || load) {
+                                    cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
+                                    cout << "Return to menu and generate directed graph or load graph from file."
+                                         << endl;
+                                }
+
                             }
                                 break;
                             case 4: {
-                                cout << "[4] Dijkstra Algorithm     | list" << endl; //directed
+                                if (KPUnavailable || load) {
+                                    cout << "[4] Dijkstra Algorithm     | list" << endl; //directed
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
+                                    cout << "Return to menu and generate directed graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 5: {
-                                cout << "[5] Bellman-Ford Algorithm | matrix" << endl; //directed
+                                if (KPUnavailable || load) {
+                                    cout << "[5] Bellman-Ford Algorithm | matrix" << endl; //directed
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
+                                    cout << "Return to menu and generate directed graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 6: {
-                                cout << "[6] Bellman-Ford Algorithm | list" << endl; //directed
+                                if (KPUnavailable || load) {
+                                    cout << "[6] Bellman-Ford Algorithm | list" << endl; //directed
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
+                                    cout << "Return to menu and generate directed graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 7: {
-                                cout << "[7] Kruskal  Algorithm | matrix" << endl; //undirected
+                                if (!KPUnavailable || load) {
+                                    cout << "[7] Kruskal  Algorithm | matrix" << endl; //undirected
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
+                                    cout << "Return to menu and generate directed graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             case 8: {
-                                cout << "[8] Kruskal Algorithm | list" << endl; //undirected
+                                if (!KPUnavailable || load) {
+                                    cout << "[8] Kruskal Algorithm | list" << endl; //undirected
+                                } else {
+                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
+                                    cout << "Return to menu and generate undirected graph or load graph from file."
+                                         << endl;
+                                }
                             }
                                 break;
                             default: {
@@ -231,6 +310,7 @@ int main() {
             default: {
                 cout << "Incorrect choice! Try again." << endl;
             }
+                break;
         }
         mode = true;
     }
