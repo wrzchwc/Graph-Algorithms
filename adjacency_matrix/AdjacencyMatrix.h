@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "../priority_queue/PriorityQueue.h"
 
 using namespace std;
 
@@ -44,6 +45,7 @@ public:
     //displays content of the martrix
     void show();
 
+    [[nodiscard]] int getNumberOfNeighbours(int vertexID) const;
 
 };
 

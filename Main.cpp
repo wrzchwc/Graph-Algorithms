@@ -3,7 +3,7 @@
 #include "Main.h"
 #include "adjacency_matrix/AdjacencyMatrix.h"
 #include "adjacency_list/AdjacencyList.h"
-
+#include "dijkstra_algorithm/DijkstraAlgorithm.h"
 
 using namespace std;
 
@@ -154,6 +154,7 @@ int main() {
                             case 1: {
                                 if (!KPUnavailable || load) {
                                     cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
+
                                 } else {
                                     cout << "Error! Mode unavailable because directed graph was generated. " << endl;
                                     cout << "Return to menu and generate undirected graph or load graph from file."
@@ -174,6 +175,9 @@ int main() {
                             case 3: {
                                 if (KPUnavailable || load) {
                                     cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
+                                    cout << "Start vertex: ";
+                                    cin >> input;
+                                    DijkstraAlgorithm::solve(matrix, input);
                                 } else {
                                     cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
                                     cout << "Return to menu and generate directed graph or load graph from file."

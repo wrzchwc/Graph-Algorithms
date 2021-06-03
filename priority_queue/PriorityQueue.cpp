@@ -60,14 +60,6 @@ void PriorityQueue::remove() {
     restore(size);
 }
 
-bool PriorityQueue::contains(int id) {
-    PrimDijkstra *tmp = queue;
-    for (int i = 0; i < size; i++)
-        if (tmp[i].id == id)
-            return true;
-    return false;
-}
-
 
 void PriorityQueue::show() {
     int tmp = 0;
@@ -115,6 +107,21 @@ void PriorityQueue::restore(int size) {
             }
         }
     }
+}
+
+int PriorityQueue::getSize() const {
+    return size;
+}
+
+PrimDijkstra PriorityQueue::getMin() {
+    return queue[0];
+}
+
+void PriorityQueue::setData(int id, PrimDijkstra primDijkstra) {
+    auto*tmp=queue;
+    while(tmp->id!=id)
+        tmp++;
+    *tmp={primDijkstra.id,primDijkstra.p,primDijkstra.d_or_key};
 }
 
 

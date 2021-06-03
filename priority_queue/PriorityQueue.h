@@ -39,11 +39,14 @@ public:
     //removes all id in the queue
     void removeAll();
 
-    //returns true if queue containsVertex specified id, otherwise returns false
-    bool contains(int id);
-
     //prints content of the queue
     void show();
+
+    [[nodiscard]] int getSize() const;
+
+    PrimDijkstra getMin();
+
+    void setData(int id, PrimDijkstra primDijkstra);
 
 };
 

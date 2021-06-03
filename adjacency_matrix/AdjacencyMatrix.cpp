@@ -29,7 +29,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
             }
         }
         //achieving density
-        while (tmp  < density) {
+        while (tmp < density) {
             int random_row = random_number(0, size - 1);
             int random_column = random_number(0, size - 1);
             if (random_row != random_column && matrix[random_row][random_column] == INT_MAX) {
@@ -113,4 +113,12 @@ void AdjacencyMatrix::initializeMatrix(int matrixSize) {
 AdjacencyMatrix::AdjacencyMatrix() {
     size = 0;
     matrix = nullptr;
+}
+
+int AdjacencyMatrix::getNumberOfNeighbours(int vertexID) const {
+    auto number = 0;
+    for (int i = 0; i < this->size; i++)
+        if (matrix[vertexID][i] != INT_MAX)
+            number++;
+    return number;
 }
