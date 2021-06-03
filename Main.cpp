@@ -1,11 +1,13 @@
 #include <iostream>
 #include <random>
+#include <chrono>
 #include "Main.h"
 #include "adjacency_matrix/AdjacencyMatrix.h"
 #include "adjacency_list/AdjacencyList.h"
 #include "dijkstra_algorithm/DijkstraAlgorithm.h"
 
 using namespace std;
+using namespace std::chrono;
 
 int *interpret(string line, const string &delimiter, int number) {
     int *tmp = new int[number], i = 0;
@@ -25,6 +27,14 @@ int random_number(int minimum, int maximum) {
     mt19937 generator(device());
     uniform_int_distribution<> distribution(minimum, maximum);
     return distribution(generator);
+}
+
+void save(double time, const string &filepath) {
+    fstream file;
+    cout << time << endl;
+    file.open(filepath, ios::out | ios::app);
+    file << time << endl;
+    file.close();
 }
 
 int main() {
@@ -174,7 +184,6 @@ int main() {
                                 break;
                             case 3: {
                                 if (KPUnavailable || load) {
-                                    cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
                                     cout << "Start vertex: ";
                                     cin >> input;
                                     DijkstraAlgorithm::solve(matrix, input);
@@ -188,7 +197,9 @@ int main() {
                                 break;
                             case 4: {
                                 if (KPUnavailable || load) {
-                                    cout << "[4] Dijkstra Algorithm     | list" << endl; //directed
+                                    cout << "Start vertex: ";
+                                    cin >> input;
+                                    DijkstraAlgorithm::solve(list, input);
                                 } else {
                                     cout << "Error! Mode unavailable because undirected graph was generated." << endl;
                                     cout << "Return to menu and generate directed graph or load graph from file."
@@ -249,7 +260,11 @@ int main() {
             }
                 break;
             case 2: {
+                auto *matrix = new AdjacencyMatrix();
+                auto *list = new AdjacencyList();
                 while (mode) {
+                    int size, maxWeight, startingEdge;
+                    double density, time;
                     cout << "--------------------------------Metrological mode--------------------------------" << endl;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Prim Algorithm         | matrix" << endl;
@@ -277,19 +292,92 @@ int main() {
                             break;
                         case 3: {
                             cout << "[3] Dijkstra Algorithm     | matrix" << endl;
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                auto start = steady_clock::now();
+                                DijkstraAlgorithm::solve(matrix, startingEdge);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "dijkstra_matrix.txt");
+                            }
                         }
                             break;
                         case 4: {
                             cout << "[4] Dijkstra Algorithm     | list" << endl;
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                list=new AdjacencyList(matrix);
+                                auto start = steady_clock::now();
+                                DijkstraAlgorithm::solve(list, startingEdge);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "dijkstra_list.txt");
+                            }
                         }
                             break;
                         case 5: {
                             cout << "[5] Bellman-Ford Algorithm | matrix" << endl;
-
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                auto start = steady_clock::now();
+                                // todo: plug algorithm in
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "bellman-ford_matrix.txt");
+                            }
                         }
                             break;
                         case 6: {
                             cout << "[6] Bellman-Ford Algorithm | list" << endl;
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                list=new AdjacencyList(matrix);
+                                auto start = steady_clock::now();
+                                //todo:plug algorithm in here
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "bellman-ford_list.txt");
+                            }
 
                         }
                             break;
@@ -309,6 +397,8 @@ int main() {
 
                     }
                 }
+                delete matrix;
+                delete list;
             }
                 break;
             default: {

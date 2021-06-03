@@ -53,6 +53,12 @@ public:
 
     //adds lower of the specified vertex
     void addNeighbour(int vertexID, int neighbourID, int edgeWeight);
+
+    [[nodiscard]] int getSize() const;
+
+    int getNumberOfNeighbours(int id);
+
+    int getData(int vertexID, int neighbourID);
 };
 
 
