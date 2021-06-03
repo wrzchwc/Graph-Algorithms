@@ -5,6 +5,7 @@
 #include "adjacency_matrix/AdjacencyMatrix.h"
 #include "adjacency_list/AdjacencyList.h"
 #include "dijkstra_algorithm/DijkstraAlgorithm.h"
+#include "prim_algorithm/PrimAlgorithm.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -164,7 +165,9 @@ int main() {
                             case 1: {
                                 if (!KPUnavailable || load) {
                                     cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
-
+                                    cout << "Start vertex: ";
+                                    cin >> input;
+                                    PrimAlgorithm::solve(matrix, input);
                                 } else {
                                     cout << "Error! Mode unavailable because directed graph was generated. " << endl;
                                     cout << "Return to menu and generate undirected graph or load graph from file."
@@ -175,6 +178,9 @@ int main() {
                             case 2: {
                                 if (!KPUnavailable || load) {
                                     cout << "[2] Prim Algorithm         | list" << endl; //undirected
+                                    cout << "Start vertex: ";
+                                    cin >> input;
+                                    PrimAlgorithm::solve(list, input);
                                 } else {
                                     cout << "Error! Mode unavailable because directed graph was generated. " << endl;
                                     cout << "Return to menu and generate undirected graph or load graph from file."
@@ -284,10 +290,49 @@ int main() {
                             break;
                         case 1: {
                             cout << "[1] Prim Algorithm         | matrix" << endl;
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                auto start = steady_clock::now();
+                                PrimAlgorithm::solve(matrix, startingEdge);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "prim_matrix.txt");
+                            }
+
                         }
                             break;
                         case 2: {
                             cout << "[2] Prim Algorithm         | list" << endl;
+                            cout << "Vertexes: ";
+                            cin >> size;
+                            cout << "Maximum edge weight: ";
+                            cin >> maxWeight;
+                            cout << "Starting vertex: ";
+                            cin >> startingEdge;
+                            cout << "Density: ";
+                            cin >> density;
+                            cout << "Attempts: ";
+                            cin >> input;
+                            for (int i = 0; i < input; i++) {
+                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                                list = new AdjacencyList(matrix);
+                                auto start = steady_clock::now();
+                                PrimAlgorithm::solve(list, startingEdge);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, "prim_list.txt");
+                            }
+
                         }
                             break;
                         case 3: {
@@ -326,7 +371,7 @@ int main() {
                             cin >> input;
                             for (int i = 0; i < input; i++) {
                                 matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
-                                list=new AdjacencyList(matrix);
+                                list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 DijkstraAlgorithm::solve(list, startingEdge);
                                 auto end = steady_clock::now();
@@ -371,7 +416,7 @@ int main() {
                             cin >> input;
                             for (int i = 0; i < input; i++) {
                                 matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
-                                list=new AdjacencyList(matrix);
+                                list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 //todo:plug algorithm in here
                                 auto end = steady_clock::now();

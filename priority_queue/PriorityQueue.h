@@ -48,6 +48,8 @@ public:
 
     void setData(int id, PrimDijkstra primDijkstra);
 
+    bool contains(int id);
+
 };
 
 

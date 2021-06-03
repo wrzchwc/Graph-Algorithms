@@ -3,7 +3,6 @@
 //
 
 #include "DijkstraAlgorithm.h"
-#include "../priority_queue/PriorityQueue.h"
 
 
 DijkstraAlgorithm::DijkstraAlgorithm() = default;
@@ -31,22 +30,23 @@ void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
             if (compare > relaxation) {
                 solution[neighbours[i].id].d_or_key = relaxation;
                 solution[neighbours[i].id].p = u;
-                queue->setData(neighbours[i].id, PrimDijkstra(neighbours[i].id, u, relaxation));
+                queue->setData(neighbours[i].id, PrimDijkstra{neighbours[i].id, u, relaxation});
             }
         }
         queue->remove();
     }
     cout << "Solution: " << endl;
-    auto mst = 0;
+    auto shortest_path = 0;
     for (int i = 0; i < size; i++) {
         if (i != startVertex) {
             cout << solution[i].p << "-" << solution[i].id << ":" << matrix->getData(solution[i].p, solution[i].id)
                  << endl;
-            mst += matrix->getData(solution[i].p, solution[i].id);
+            shortest_path += matrix->getData(solution[i].p, solution[i].id);
         }
     }
-    cout << "Minimum spanning tree: " << mst << endl;
-
+    cout << "Shortest path: " << shortest_path << endl;
+    delete queue;
+    delete[] solution;
 }
 
 void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
@@ -70,19 +70,21 @@ void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
             if (compare > relaxation) {
                 solution[neighbours[i].id].d_or_key = relaxation;
                 solution[neighbours[i].id].p = u;
-                queue->setData(neighbours[i].id, PrimDijkstra(neighbours[i].id, u, relaxation));
+                queue->setData(neighbours[i].id, PrimDijkstra{neighbours[i].id, u, relaxation});
             }
         }
         queue->remove();
     }
     cout << "Solution: " << endl;
-    auto mst = 0;
+    auto shortest_path = 0;
     for (int i = 0; i < size; i++) {
         if (i != startVertex) {
             cout << solution[i].p << "-" << solution[i].id << ":" << list->getData(solution[i].p, solution[i].id)
                  << endl;
-            mst += list->getData(solution[i].p, solution[i].id);
+            shortest_path += list->getData(solution[i].p, solution[i].id);
         }
     }
-    cout << "Minimum spanning tree: " << mst << endl;
+    cout << "Shortest path: " << shortest_path << endl;
+    delete queue;
+    delete[] solution;
 }

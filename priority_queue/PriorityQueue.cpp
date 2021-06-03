@@ -118,10 +118,18 @@ PrimDijkstra PriorityQueue::getMin() {
 }
 
 void PriorityQueue::setData(int id, PrimDijkstra primDijkstra) {
-    auto*tmp=queue;
-    while(tmp->id!=id)
+    auto *tmp = queue;
+    while (tmp->id != id)
         tmp++;
-    *tmp={primDijkstra.id,primDijkstra.p,primDijkstra.d_or_key};
+    *tmp = {primDijkstra.id, primDijkstra.p, primDijkstra.d_or_key};
+}
+
+bool PriorityQueue::contains(int id) {
+    auto *tmp = queue;
+    for (int i = 0; i < size; i++, tmp++)
+        if (tmp->id == id)
+            return true;
+    return false;
 }
 
 
