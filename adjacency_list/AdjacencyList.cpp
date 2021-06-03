@@ -166,4 +166,34 @@ AdjacencyList::AdjacencyList(AdjacencyMatrix *matrix) {
                 addNeighbour(row, column, matrix->getData(row, column));
 }
 
+int AdjacencyList::getSize() const {
+    return size;
+}
+
+int AdjacencyList::getNumberOfNeighbours(int id) {
+    auto *tmp = first;
+    while (tmp->getID() != id)
+        tmp = tmp->getNext();
+    auto *tmp2 = tmp->getLower();
+    int neighbours = 0;
+    while (tmp2 != nullptr) {
+        tmp2 = tmp2->getLower();
+        neighbours++;
+    }
+    return neighbours;
+}
+
+int AdjacencyList::getData(int vertexID, int neighbourID) {
+    auto *tmp = first;
+    while (tmp->getID() != vertexID)
+        tmp = tmp->getNext();
+    auto *tmp2 = tmp->getLower();
+    while (tmp2 != nullptr) {
+        if (tmp2->getID() == neighbourID)
+            return tmp2->getEdgeWeight();
+        tmp2 = tmp2->getLower();
+    }
+    return INT_MAX;
+}
+
 
