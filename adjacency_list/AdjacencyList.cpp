@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include "AdjacencyList.h"
 #include "../Main.h"
@@ -13,6 +12,7 @@ using namespace std;
 
 AdjacencyList::AdjacencyList() {
     size = 0;
+    initialVertex = 0;
     first = nullptr;
     last = nullptr;
 }
@@ -129,7 +129,6 @@ void AdjacencyList::addNeighbour(int vertexID, int neighbourID, int edgeWeight) 
 }
 
 AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bool directed) {
-    //todo: directed vs undirected graph
     fstream file;
     string tmp;
     this->size = 0;
@@ -138,12 +137,18 @@ AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bo
 
     file.open(filepath, ios::in);
     getline(file, tmp);
-    //parameters[0]-edges parameters[1]-vertexes parameters[2]-start parameters[3]-end
+    // parameters[0]-edges
+    // parameters[1]-vertexes
+    // parameters[2]-start
+    // parameters[3]-end
     int *parameters = interpret(tmp, delimiter, 4);
+    initialVertex = parameters[2];
     for (int i = 0; i < parameters[1]; i++)
         addVertex(i);
     while (getline(file, tmp)) {
-        //edge[0] - start edge[1] - end edge [2] - weight
+        //edge[0] - start
+        // edge[1] - end
+        // edge [2] - weight
         int *edge = interpret(tmp, delimiter, 3);
         addNeighbour(edge[0], edge[1], edge[2]);
         if (!directed)
@@ -158,6 +163,7 @@ AdjacencyList::AdjacencyList(AdjacencyMatrix *matrix) {
     this->size = 0;
     first = nullptr;
     last = nullptr;
+    initialVertex = matrix->getInitialVertex();
     for (int i = 0; i < matrix->getSize(); i++)
         addVertex(i);
     for (int row = 0; row < matrix->getSize(); row++)
@@ -194,6 +200,10 @@ int AdjacencyList::getData(int vertexID, int neighbourID) {
         tmp2 = tmp2->getLower();
     }
     return INT_MAX;
+}
+
+int AdjacencyList::getInitialVertex() const {
+    return initialVertex;
 }
 
 

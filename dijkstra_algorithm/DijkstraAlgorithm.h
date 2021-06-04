@@ -10,6 +10,7 @@
 
 class DijkstraAlgorithm {
 private:
+    //co-functions for printing the solution
     static void solutionSequence(PrimDijkstra *array, int size, int startVertex);
     static bool inSequence(int id, const int *sequence, int size);
 public:
@@ -19,8 +20,10 @@ public:
     //destructor
     virtual ~DijkstraAlgorithm();
 
+    //solver for adjacency matrix
     static void solve(AdjacencyMatrix *matrix, int startVertex);
 
+    //solver for adjacency list
     static void solve(AdjacencyList *list, int startVertex);
 };
 

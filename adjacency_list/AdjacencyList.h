@@ -14,14 +14,22 @@ using namespace std;
 
 class AdjacencyList {
 private:
+    //number of vertexes in the list
     int size;
+    //initial vertex
+    int initialVertex;
+    //first vertex in the list
     Vertex *first;
+    //last vertex in the list
     Vertex *last;
 
+    //sets first vertex in the list
     void setFirst(Vertex *vertex);
 
+    //sets last vertex in the list
     void setLast(Vertex *vertex);
 
+    //removes all neighbours of given vertex
     static void removeNeighbours(Vertex *vertex);
 
 public:
@@ -29,7 +37,7 @@ public:
     AdjacencyList();
 
     //constructor using matrix
-    explicit AdjacencyList(AdjacencyMatrix* matrix);
+    explicit AdjacencyList(AdjacencyMatrix *matrix);
 
     AdjacencyList(const string &filepath, const string &delimiter, bool directed);
 
@@ -54,11 +62,17 @@ public:
     //adds lower of the specified vertex
     void addNeighbour(int vertexID, int neighbourID, int edgeWeight);
 
+    //returns size of the list
     [[nodiscard]] int getSize() const;
 
+    //returns number of neighbours of specified vertex
     int getNumberOfNeighbours(int id);
 
+    //returns weight of specified edge
     int getData(int vertexID, int neighbourID);
+
+    //returns initial vertex of the graph
+    [[nodiscard]] int getInitialVertex() const;
 };
 
 

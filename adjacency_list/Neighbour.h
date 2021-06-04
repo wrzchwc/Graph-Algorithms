@@ -9,8 +9,9 @@
 
 class Neighbour : public Node {
 private:
-    //weight of edge between containsVertex and lower
+    //weight of edge between vertex and this neighbour
     int edgeWeight;
+    //next neighbour of the vertex
     Neighbour *lower;
 public:
     //constructor

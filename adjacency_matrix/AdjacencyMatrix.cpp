@@ -9,7 +9,7 @@
 
 using namespace std;
 
-AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double density, int maxWeight) {
+AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double density, int min, int max) {
     this->size = size;
     this->matrix = nullptr;
     initializeMatrix(size);
@@ -21,7 +21,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 if (column - row == 1) {
-                    auto randomNumber = random_number(1, maxWeight);
+                    auto randomNumber = random_number(min, max);
                     matrix[row][column] = randomNumber;
                     if (!directed)
                         matrix[column][row] = randomNumber;
@@ -30,10 +30,10 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
         }
         //achieving density
         while (tmp < density) {
-            int random_row = random_number(1, size - 1);
-            int random_column = random_number(1, size - 1);
+            int random_row = random_number(0, size - 1);
+            int random_column = random_number(0, size - 1);
             if (random_row != random_column && matrix[random_row][random_column] == INT_MAX) {
-                auto random_weight = random_number(0, maxWeight);
+                auto random_weight = random_number(min, max);
                 setData(random_weight, random_row, random_column);
                 tmp += 0.5 / edges_max;
                 if (!directed) {
@@ -42,6 +42,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
                 }
             }
         }
+
     } else
         cout << "Impossible to achieve density of " << density << " with number of vertexes equal " << size << endl;
 
@@ -79,14 +80,13 @@ int AdjacencyMatrix::getSize() const {
 AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed) {
     fstream file;
     string tmp;
-    this->size = 0;
     this->matrix = nullptr;
-
     file.open(filepath, ios::in);
     getline(file, tmp);
     //parameters[0]-edges parameters[1]-vertexes parameters[2]-start parameters[3]-end
     int *parameters = interpret(tmp, delimiter, 4);
-
+    this->size = parameters[1];
+    this->initialVertex = parameters[2];
     initializeMatrix(parameters[1]);
 
     while (getline(file, tmp)) {
@@ -96,7 +96,6 @@ AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter
         if (!directed)
             setData(edge[2], edge[1], edge[0]);
     }
-
     file.close();
 }
 
@@ -112,6 +111,7 @@ void AdjacencyMatrix::initializeMatrix(int matrixSize) {
 
 AdjacencyMatrix::AdjacencyMatrix() {
     size = 0;
+    initialVertex = 0;
     matrix = nullptr;
 }
 
@@ -121,4 +121,8 @@ int AdjacencyMatrix::getNumberOfNeighbours(int vertexID) const {
         if (matrix[vertexID][i] != INT_MAX)
             number++;
     return number;
+}
+
+int AdjacencyMatrix::getInitialVertex() const {
+    return initialVertex;
 }

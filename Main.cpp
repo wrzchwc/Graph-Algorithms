@@ -44,11 +44,12 @@ void directedGraphError() {
 }
 
 void undirectedGraphError() {
-    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
+    cout << "Error! Mode unavailable because undirected graph was generated ";
+    cout << "or graph with negative edges was generated. " << endl;
     cout << "Return to menu and generate directed graph or load graph from file." << endl;
 }
 
-int getStartVertex() {
+int getInitialVertex() {
     int input;
     cout << "Start vertex: ";
     cin >> input;
@@ -60,19 +61,22 @@ int getStartVertex() {
 //parameters[2]-start
 //parameters[3]-density
 //parameters[4]-attempts
+//parameters[5]-min weight
 double *getParameters() {
-    auto *tmp = new double[5];
+    auto *parameters = new double[6];
     cout << "Vertexes: ";
-    cin >> tmp[0];
+    cin >> parameters[0];
     cout << "Maximum edge weight: ";
-    cin >> tmp[1];
+    cin >> parameters[1];
+    cout << "Minimum edge weight: ";
+    cin >> parameters[6];
     cout << "Starting vertex: ";
-    cin >> tmp[2];
+    cin >> parameters[2];
     cout << "Density: ";
-    cin >> tmp[3];
+    cin >> parameters[3];
     cout << "Attempts: ";
-    cin >> tmp[4];
-    return tmp;
+    cin >> parameters[4];
+    return parameters;
 }
 
 //menu headlines 1-2:P, 2-3:D,4-5:BF,7-8:K
@@ -120,6 +124,7 @@ int main() {
                     // path to the file, where graph parameters are stored
                     string filepath, delimiter = " ";
                     bool load = false, KPUnavailable = false;
+                    int minWeight;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Generate graph" << endl;
                     cout << "[2] Load graph from the file" << endl;
@@ -142,23 +147,23 @@ int main() {
                             cin >> density;
                             cout << "Maximum weight of edge: ";
                             cin >> maxWeight;
-                            cout << "Directed graph (1-yes, 0-no): ";
-                            cin >> input;
-                            if (input == 0) {
-                                directed = false;
-                                KPUnavailable = false;
-                            } else {
-                                directed = true;
-                                KPUnavailable = true;
+                            auto accepted = false;
+                            while (!accepted) {
+                                cout << "Directed graph (1-yes, 0-no): ";
+                                cin >> input;
+                                cout << "Minimum weight of edge: ";
+                                cin >> minWeight;
+                                accepted = (input == 1) || (input == 0 && minWeight >= 0);
                             }
-                            matrix = new AdjacencyMatrix(size, true, directed, density, maxWeight);
+                            directed = input != 0;
+                            KPUnavailable = input != 0;
+                            matrix = new AdjacencyMatrix(size, true, directed, density, minWeight, maxWeight);
                             list = new AdjacencyList(matrix);
                             algorithm = true;
                             cout << "Graph generation successful." << endl;
                         }
                             break;
                         case 2: {
-                            // handle for .txt file
                             fstream file;
                             cout << "WARNING! FILE MUST BE IN THE SAME FOLDER AS EXECUTABLE FILE." << endl;
                             cout << "NAME OF THE FILE SHOULD BE ENTERED LIKE THIS: name.extension" << endl;
@@ -213,7 +218,8 @@ int main() {
                             case 1: {
                                 if (!KPUnavailable || load) {
                                     cout << headlines[input] << endl; //undirected
-                                    PrimAlgorithm::solve(matrix, getStartVertex());
+                                    PrimAlgorithm::solve(matrix,
+                                                         load ? matrix->getInitialVertex() : getInitialVertex());
                                 } else
                                     directedGraphError();
                             }
@@ -221,23 +227,25 @@ int main() {
                             case 2: {
                                 if (!KPUnavailable || load) {
                                     cout << headlines[input] << endl; //undirected
-                                    PrimAlgorithm::solve(list, getStartVertex());
+                                    PrimAlgorithm::solve(list, load ? list->getInitialVertex() : getInitialVertex());
                                 } else
                                     directedGraphError();
                             }
                                 break;
                             case 3: {
-                                if (KPUnavailable || load) {
+                                if ((KPUnavailable || load) && minWeight >= 0) {
                                     cout << headlines[input] << endl;
-                                    DijkstraAlgorithm::solve(matrix, getStartVertex());
+                                    DijkstraAlgorithm::solve(matrix,
+                                                             load ? matrix->getInitialVertex() : getInitialVertex());
                                 } else
                                     undirectedGraphError();
                             }
                                 break;
                             case 4: {
-                                if (KPUnavailable || load) {
+                                if ((KPUnavailable || load) && minWeight >= 0) {
                                     cout << headlines[input] << endl;
-                                    DijkstraAlgorithm::solve(list, getStartVertex());
+                                    DijkstraAlgorithm::solve(list,
+                                                             load ? list->getInitialVertex() : getInitialVertex());
                                 } else
                                     undirectedGraphError();
                             }
@@ -299,8 +307,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
@@ -314,8 +322,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(list, (int) parameters[2]);
@@ -330,8 +338,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 DijkstraAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
@@ -345,8 +353,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 DijkstraAlgorithm::solve(list, (int) parameters[2]);
@@ -361,8 +369,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 // todo: plug algorithm in
                                 auto end = steady_clock::now();
@@ -376,8 +384,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 //todo:plug algorithm in here
@@ -393,8 +401,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
@@ -409,8 +417,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
-                                                             (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
+                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(list, (int) parameters[2]);

@@ -15,8 +15,11 @@ public:
 
     //destructor
     virtual ~PrimAlgorithm();
+
+    //solver for adjacency matrix
     static void solve(AdjacencyMatrix *matrix, int startVertex);
 
+    //solver for adjacency matrix
     static void solve(AdjacencyList *list, int startVertex);
 };
 

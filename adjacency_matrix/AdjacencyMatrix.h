@@ -17,7 +17,8 @@ private:
     int **matrix;
     //size*size is the actual size of matrix
     int size;
-
+    //initial vertex
+    int initialVertex;
     //initialises matrix
     void initializeMatrix(int matrixSize);
 
@@ -25,7 +26,7 @@ public:
     AdjacencyMatrix();
 
     //constructor
-    explicit AdjacencyMatrix(int size, bool random, bool directed, double density, int maxWeight);
+    explicit AdjacencyMatrix(int size, bool random, bool directed, double density, int min, int max);
 
     //constructor loading graph from file
     explicit AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed);
@@ -45,7 +46,10 @@ public:
     //displays content of the martrix
     void show();
 
+    //number of neighbours of given vertex
     [[nodiscard]] int getNumberOfNeighbours(int vertexID) const;
+
+    [[nodiscard]] int getInitialVertex() const;
 
 };
 

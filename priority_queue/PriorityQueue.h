@@ -42,12 +42,16 @@ public:
     //prints content of the queue
     void show();
 
+    //returns size fo the queue
     [[nodiscard]] int getSize() const;
 
+    //returns element with minimum d or minimum key
     PrimDijkstra getMin();
 
+    //sets specified element in the queue
     void setData(int id, PrimDijkstra primDijkstra);
 
+    //returns true if vertex with given ID is in the queue
     bool contains(int id);
 
 };

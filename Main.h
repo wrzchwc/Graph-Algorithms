@@ -7,6 +7,8 @@
 #include <iostream>
 
 using namespace std;
+//interprets line stored in the txt file
 int* interpret(string line, const string& delimiter, int number);
+//returns random number
 int random_number(int minimum, int maximum);
 #endif //PDBFK_MAIN_H
