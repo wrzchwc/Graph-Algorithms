@@ -38,6 +38,63 @@ void save(double time, const string &filepath) {
     file.close();
 }
 
+void directedGraphError() {
+    cout << "Error! Mode unavailable because directed graph was generated. " << endl;
+    cout << "Return to menu and generate undirected graph or load graph from file." << endl;
+}
+
+void undirectedGraphError() {
+    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
+    cout << "Return to menu and generate directed graph or load graph from file." << endl;
+}
+
+int getStartVertex() {
+    int input;
+    cout << "Start vertex: ";
+    cin >> input;
+    return input;
+}
+
+//parameters[0]-size
+//parameters[1]-max weight
+//parameters[2]-start
+//parameters[3]-density
+//parameters[4]-attempts
+double *getParameters() {
+    auto *tmp = new double[5];
+    cout << "Vertexes: ";
+    cin >> tmp[0];
+    cout << "Maximum edge weight: ";
+    cin >> tmp[1];
+    cout << "Starting vertex: ";
+    cin >> tmp[2];
+    cout << "Density: ";
+    cin >> tmp[3];
+    cout << "Attempts: ";
+    cin >> tmp[4];
+    return tmp;
+}
+
+//menu headlines 1-2:P, 2-3:D,4-5:BF,7-8:K
+string headlines[9] = {"[0] Return to menu",
+                       "[1] Prim Algorithm         | matrix",
+                       "[2] Prim Algorithm         | list",
+                       "[3] Dijkstra Algorithm     | matrix",
+                       "[4] Dijkstra Algorithm     | list",
+                       "[5] Bellman-Ford Algorithm | matrix",
+                       "[6] Bellman-Ford Algorithm | list",
+                       "[7] Kruskal  Algorithm     | matrix",
+                       "[8] Kruskal Algorithm      | list"};
+string filepaths[8] = {"prim_matrix.txt", "prim_list.txt", "dijkstra_matrix.txt", "dijkstra_list.txt",
+                       "bellman-ford_matrix.txt", "bellman-ford_list.txt", "kruskal_matrix.txt", "kruskal_list.txt"
+};
+
+void printAlgorithms() {
+    for (const string &headline:headlines)
+        cout << headline << endl;
+    cout << "> ";
+}
+
 int main() {
     cout << "--------------------------------DS&CC Project--------------------------------" << endl;
     cout << "Jakub Wierzchowiec, 06.2021" << endl;
@@ -65,7 +122,7 @@ int main() {
                     bool load = false, KPUnavailable = false;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Generate graph" << endl;
-                    cout << "[2] Read graph from the file" << endl;
+                    cout << "[2] Load graph from the file" << endl;
                     cout << "> ";
                     cin >> input;
                     switch (input) {
@@ -128,16 +185,7 @@ int main() {
                     }
                     while (algorithm) {
                         cout << "--------------------------------Control mode--------------------------------" << endl;
-                        cout << "[0] Return to menu" << endl;
-                        cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
-                        cout << "[2] Prim Algorithm         | list" << endl; //undirected
-                        cout << "[3] Dijkstra Algorithm     | matrix" << endl; //directed
-                        cout << "[4] Dijkstra Algorithm     | list" << endl; //directed
-                        cout << "[5] Bellman-Ford Algorithm | matrix" << endl; //directed
-                        cout << "[6] Bellman-Ford Algorithm | list" << endl; //directed
-                        cout << "[7] Kruskal  Algorithm     | matrix" << endl; //undirected
-                        cout << "[8] Kruskal Algorithm      | list" << endl; //undirected
-                        cout << "> ";
+                        printAlgorithms();
                         cin >> input;
                         input == 0 ? algorithm = false : algorithm = true;
                         if (load && input > 0) {
@@ -164,93 +212,62 @@ int main() {
                                 break;
                             case 1: {
                                 if (!KPUnavailable || load) {
-                                    cout << "[1] Prim Algorithm         | matrix" << endl; //undirected
-                                    cout << "Start vertex: ";
-                                    cin >> input;
-                                    PrimAlgorithm::solve(matrix, input);
-                                } else {
-                                    cout << "Error! Mode unavailable because directed graph was generated. " << endl;
-                                    cout << "Return to menu and generate undirected graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl; //undirected
+                                    PrimAlgorithm::solve(matrix, getStartVertex());
+                                } else
+                                    directedGraphError();
                             }
                                 break;
                             case 2: {
                                 if (!KPUnavailable || load) {
-                                    cout << "[2] Prim Algorithm         | list" << endl; //undirected
-                                    cout << "Start vertex: ";
-                                    cin >> input;
-                                    PrimAlgorithm::solve(list, input);
-                                } else {
-                                    cout << "Error! Mode unavailable because directed graph was generated. " << endl;
-                                    cout << "Return to menu and generate undirected graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl; //undirected
+                                    PrimAlgorithm::solve(list, getStartVertex());
+                                } else
+                                    directedGraphError();
                             }
                                 break;
                             case 3: {
                                 if (KPUnavailable || load) {
-                                    cout << "Start vertex: ";
-                                    cin >> input;
-                                    DijkstraAlgorithm::solve(matrix, input);
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
-                                    cout << "Return to menu and generate directed graph or load graph from file."
-                                         << endl;
-                                }
-
+                                    cout << headlines[input] << endl;
+                                    DijkstraAlgorithm::solve(matrix, getStartVertex());
+                                } else
+                                    undirectedGraphError();
                             }
                                 break;
                             case 4: {
                                 if (KPUnavailable || load) {
-                                    cout << "Start vertex: ";
-                                    cin >> input;
-                                    DijkstraAlgorithm::solve(list, input);
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
-                                    cout << "Return to menu and generate directed graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl;
+                                    DijkstraAlgorithm::solve(list, getStartVertex());
+                                } else
+                                    undirectedGraphError();
                             }
                                 break;
                             case 5: {
                                 if (KPUnavailable || load) {
-                                    cout << "[5] Bellman-Ford Algorithm | matrix" << endl; //directed
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
-                                    cout << "Return to menu and generate directed graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl;
+                                } else
+                                    undirectedGraphError();
                             }
                                 break;
                             case 6: {
                                 if (KPUnavailable || load) {
-                                    cout << "[6] Bellman-Ford Algorithm | list" << endl; //directed
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated." << endl;
-                                    cout << "Return to menu and generate directed graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl;
+                                } else
+                                    undirectedGraphError();
                             }
                                 break;
                             case 7: {
                                 if (!KPUnavailable || load) {
-                                    cout << "[7] Kruskal  Algorithm | matrix" << endl; //undirected
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
-                                    cout << "Return to menu and generate directed graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl;
+                                } else
+                                    directedGraphError();
                             }
                                 break;
                             case 8: {
                                 if (!KPUnavailable || load) {
-                                    cout << "[8] Kruskal Algorithm | list" << endl; //undirected
-                                } else {
-                                    cout << "Error! Mode unavailable because undirected graph was generated. " << endl;
-                                    cout << "Return to menu and generate undirected graph or load graph from file."
-                                         << endl;
-                                }
+                                    cout << headlines[input] << endl;
+                                } else
+                                    directedGraphError();
                             }
                                 break;
                             default: {
@@ -269,19 +286,9 @@ int main() {
                 auto *matrix = new AdjacencyMatrix();
                 auto *list = new AdjacencyList();
                 while (mode) {
-                    int size, maxWeight, startingEdge;
-                    double density, time;
+                    double time;
                     cout << "--------------------------------Metrological mode--------------------------------" << endl;
-                    cout << "[0] Return to menu" << endl;
-                    cout << "[1] Prim Algorithm         | matrix" << endl;
-                    cout << "[2] Prim Algorithm         | list" << endl;
-                    cout << "[3] Dijkstra Algorithm     | matrix" << endl;
-                    cout << "[4] Dijkstra Algorithm     | list" << endl;
-                    cout << "[5] Bellman-Ford Algorithm | matrix" << endl;
-                    cout << "[6] Bellman-Ford Algorithm | list" << endl;
-                    cout << "[7] Kruskal  Algorithm     | matrix" << endl;
-                    cout << "[8] Kruskal Algorithm      | list" << endl;
-                    cout << "> ";
+                    printAlgorithms();
                     cin >> input;
                     switch (input) {
                         case 0: {
@@ -289,150 +296,129 @@ int main() {
                         }
                             break;
                         case 1: {
-                            cout << "[1] Prim Algorithm         | matrix" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 auto start = steady_clock::now();
-                                PrimAlgorithm::solve(matrix, startingEdge);
+                                PrimAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "prim_matrix.txt");
+                                save(time, filepaths[input]);
                             }
-
+                            delete parameters;
                         }
                             break;
                         case 2: {
-                            cout << "[2] Prim Algorithm         | list" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
-                                PrimAlgorithm::solve(list, startingEdge);
+                                PrimAlgorithm::solve(list, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "prim_list.txt");
+                                save(time, filepaths[input]);
                             }
-
+                            delete parameters;
                         }
                             break;
                         case 3: {
-                            cout << "[3] Dijkstra Algorithm     | matrix" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 auto start = steady_clock::now();
-                                DijkstraAlgorithm::solve(matrix, startingEdge);
+                                DijkstraAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "dijkstra_matrix.txt");
+                                save(time, filepaths[input]);
                             }
+                            delete parameters;
                         }
                             break;
                         case 4: {
-                            cout << "[4] Dijkstra Algorithm     | list" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
-                                DijkstraAlgorithm::solve(list, startingEdge);
+                                DijkstraAlgorithm::solve(list, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "dijkstra_list.txt");
+                                save(time, filepaths[input]);
                             }
+                            delete parameters;
                         }
                             break;
                         case 5: {
-                            cout << "[5] Bellman-Ford Algorithm | matrix" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 // todo: plug algorithm in
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "bellman-ford_matrix.txt");
+                                save(time, filepaths[input]);
                             }
+                            delete parameters;
                         }
                             break;
                         case 6: {
-                            cout << "[6] Bellman-Ford Algorithm | list" << endl;
-                            cout << "Vertexes: ";
-                            cin >> size;
-                            cout << "Maximum edge weight: ";
-                            cin >> maxWeight;
-                            cout << "Starting vertex: ";
-                            cin >> startingEdge;
-                            cout << "Density: ";
-                            cin >> density;
-                            cout << "Attempts: ";
-                            cin >> input;
-                            for (int i = 0; i < input; i++) {
-                                matrix = new AdjacencyMatrix(size, true, true, density, maxWeight);
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 //todo:plug algorithm in here
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, "bellman-ford_list.txt");
+                                save(time, filepaths[input]);
                             }
+                            delete parameters;
 
                         }
                             break;
                         case 7: {
-                            cout << "[7] Kruskal  Algorithm      | matrix" << endl;
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
+                                auto start = steady_clock::now();
+                                PrimAlgorithm::solve(matrix, (int) parameters[2]);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, filepaths[input]);
+                            }
+                            delete parameters;
 
                         }
                             break;
                         case 8: {
-                            cout << "[8] Kruskal Algorithm       | list" << endl;
+                            cout << headlines[input] << endl;
+                            auto *parameters = getParameters();
+                            for (int i = 0; i < parameters[4]; i++) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, true, parameters[3],
+                                                             (int) parameters[1]);
+                                list = new AdjacencyList(matrix);
+                                auto start = steady_clock::now();
+                                PrimAlgorithm::solve(list, (int) parameters[2]);
+                                auto end = steady_clock::now();
+                                time = double(duration_cast<nanoseconds>(end - start).count());
+                                save(time, filepaths[input]);
+                            }
+                            delete parameters;
                         }
                             break;
                         default: {

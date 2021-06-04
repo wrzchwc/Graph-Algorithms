@@ -21,7 +21,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
                 if (column - row == 1) {
-                    auto randomNumber = random_number(0, maxWeight);
+                    auto randomNumber = random_number(1, maxWeight);
                     matrix[row][column] = randomNumber;
                     if (!directed)
                         matrix[column][row] = randomNumber;
@@ -30,8 +30,8 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double de
         }
         //achieving density
         while (tmp < density) {
-            int random_row = random_number(0, size - 1);
-            int random_column = random_number(0, size - 1);
+            int random_row = random_number(1, size - 1);
+            int random_column = random_number(1, size - 1);
             if (random_row != random_column && matrix[random_row][random_column] == INT_MAX) {
                 auto random_weight = random_number(0, maxWeight);
                 setData(random_weight, random_row, random_column);
