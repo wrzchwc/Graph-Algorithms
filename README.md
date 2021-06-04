@@ -8,21 +8,22 @@ writen in C++. Mersenne Twister algorithm was used for all random number generat
 - Kruskal Algorithm
 # Loading graphs
 Program offers loading graphs saved in a txt file. To load a file choose: Control mode/Load graph 
-The required format of the source file is:
-a0 a1 a2 \n
-b0 c0 d0 \n
-|  |  | \n
-bn cn dn \n
+The required format of the source file is:\
+a0 a1 a2 \
+b0 c0 d0 \
+bn cn dn\
 where:
-a0 - number of edges in the graph
-a1 - number of vertexes in the graph
-a2 - initial vertex (optional for MST algorithms)
-b0 - beginning of the edge
-b1 - end of the edge
-b2 - weight of the edge
+- a0 - number of edges in the graph
+- a1 - number of vertexes in the graph
+- a2 - initial vertex (optional for MST algorithms)
+- b0 - beginning of the edge
+- b1 - end of the edge
+- b2 - weight of the edge
+
 Furthermore:
 - vertexes should be indexed steady from 0
 - all numbers should be separated with the delimiter of " " (single space)
 - there must be single empty line after data of the last edge
-- source file should be located in the same location as executable file 
+- source file should be located in the same location as executable file \
+
 
