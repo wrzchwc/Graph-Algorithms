@@ -9,6 +9,9 @@
 #include "../adjacency_list/AdjacencyList.h"
 
 class DijkstraAlgorithm {
+private:
+    static void solutionSequence(PrimDijkstra *array, int size, int startVertex);
+    static bool inSequence(int id, const int *sequence, int size);
 public:
     //constructor
     DijkstraAlgorithm();

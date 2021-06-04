@@ -38,12 +38,11 @@ void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
     cout << "Solution: " << endl;
     auto shortest_path = 0;
     for (int i = 0; i < size; i++) {
-        if (i != startVertex) {
-            cout << solution[i].p << "-" << solution[i].id << ":" << matrix->getData(solution[i].p, solution[i].id)
-                 << endl;
+        cout << "vertex: "<<solution[i].id << " distance: " << solution[i].d_or_key << endl;
+        if (i != startVertex)
             shortest_path += matrix->getData(solution[i].p, solution[i].id);
-        }
     }
+    solutionSequence(solution, size, startVertex);
     cout << "Shortest path: " << shortest_path << endl;
     delete queue;
     delete[] solution;
@@ -78,13 +77,46 @@ void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
     cout << "Solution: " << endl;
     auto shortest_path = 0;
     for (int i = 0; i < size; i++) {
-        if (i != startVertex) {
-            cout << solution[i].p << "-" << solution[i].id << ":" << list->getData(solution[i].p, solution[i].id)
-                 << endl;
+        cout << "vertex: "<<solution[i].id << " distance: " << solution[i].d_or_key << endl;
+        if (i != startVertex)
             shortest_path += list->getData(solution[i].p, solution[i].id);
-        }
     }
+    solutionSequence(solution, size, startVertex);
     cout << "Shortest path: " << shortest_path << endl;
     delete queue;
     delete[] solution;
+}
+
+bool DijkstraAlgorithm::inSequence(int id, const int *sequence, int size) {
+    for (int i = 0; i < size; i++)
+        if (sequence[i] == id)
+            return true;
+    return false;
+}
+
+void DijkstraAlgorithm::solutionSequence(PrimDijkstra *array, int size, int startVertex) {
+    auto *sequence = new int[size];
+    for (int i = 0; i < size; i++)
+        sequence[i] = INT_MAX;
+    auto max_d = 0, max_id = 0;
+    for (int i = 0; i < size; i++) {
+        if (i != startVertex && array[i].d_or_key > max_d) {
+            max_id = i;
+            max_d = array[i].d_or_key;
+        }
+    }
+    sequence[0] = max_id;
+    for (int i = 1; i < size;) {
+        auto previous = array[max_id].p;
+        for (int j = 0; j < size; j++)
+            if (j != startVertex)
+                if (!inSequence(j, sequence, size) && array[j].p == previous)
+                    sequence[i++] = j;
+        sequence[i++] = previous;
+        max_id = previous;
+    }
+    for (int i = size - 1; i >= 0; i--) {
+        cout << sequence[i] << " ";
+    }
+    cout << endl;
 }
