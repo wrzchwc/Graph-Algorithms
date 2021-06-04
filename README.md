@@ -17,8 +17,8 @@ where:
 - a1 - number of vertexes in the graph
 - a2 - initial vertex (optional for MST algorithms)
 - b0 - beginning of the edge
-- b1 - end of the edge
-- b2 - weight of the edge
+- c0 - end of the edge
+- d0 - weight of the edge
 
 Furthermore:
 - vertexes should be indexed steady from 0
