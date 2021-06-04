@@ -1,4 +1,4 @@
-## Graph algorithms
+## Graph Algorithms
 # General characteristics
 Project researches impact of graph representation for the time of MST and shortest path algorithms execution. It was 
 writen in C++. Mersenne Twister algorithm was used for all random number generations. Graph algorithms include:
