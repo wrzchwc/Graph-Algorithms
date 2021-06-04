@@ -7,7 +7,7 @@ writen in C++. Mersenne Twister algorithm was used for all random number generat
 - Prim Algorithm
 - Kruskal Algorithm
 # Loading graphs
-Program offers loading graphs saved in a txt file. To load a file choose: Control mode/Load graph 
+Program offers loading graphs saved in a txt file. To load a file choose: Control mode/Load graph from the file\
 The required format of the source file is:\
 a0 a1 a2 \
 b0 c0 d0 \
