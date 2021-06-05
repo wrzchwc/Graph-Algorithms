@@ -14,17 +14,17 @@ PriorityQueue::PriorityQueue() {
     size = 0;
 }
 
-void PriorityQueue::add(PrimDijkstra item) {
+void PriorityQueue::add(GraphAlgorithmStructure item) {
     //queue is empty
     if (queue == nullptr || size == 0) {
         size++;
-        queue = new PrimDijkstra[size];
+        queue = new GraphAlgorithmStructure[size];
         queue[0] = item;
     }
         //queue is not empty
     else {
         size++;
-        auto *tmp = new PrimDijkstra[size];
+        auto *tmp = new GraphAlgorithmStructure[size];
         for (int i = 0; i < size; i++) {
             tmp[i] = queue[i];
         }
@@ -45,7 +45,7 @@ void PriorityQueue::remove() {
     else if (size > 1) {
         swap(queue[0], queue[size - 1]);
         size--;
-        auto *tmp = new PrimDijkstra[size];
+        auto *tmp = new GraphAlgorithmStructure[size];
         for (int i = 0; i < size; i++)
             tmp[i] = queue[i];
         delete queue;
@@ -87,8 +87,8 @@ PriorityQueue::~PriorityQueue() {
     queue = nullptr;
 }
 
-PriorityQueue::PriorityQueue(PrimDijkstra *collection, int size) {
-    queue = new PrimDijkstra[size];
+PriorityQueue::PriorityQueue(GraphAlgorithmStructure *collection, int size) {
+    queue = new GraphAlgorithmStructure[size];
     for (int i = 0; i < size; i++) {
         this->queue[i] = collection[i];
     }
@@ -113,11 +113,11 @@ int PriorityQueue::getSize() const {
     return size;
 }
 
-PrimDijkstra PriorityQueue::getMin() {
+GraphAlgorithmStructure PriorityQueue::getMin() {
     return queue[0];
 }
 
-void PriorityQueue::setData(int id, PrimDijkstra primDijkstra) {
+void PriorityQueue::setData(int id, GraphAlgorithmStructure primDijkstra) {
     auto *tmp = queue;
     while (tmp->id != id)
         tmp++;

@@ -11,7 +11,7 @@ DijkstraAlgorithm::~DijkstraAlgorithm() = default;
 
 void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
     auto size = matrix->getSize();
-    auto *solution = new PrimDijkstra[size];
+    auto *solution = new GraphAlgorithmStructure[size];
     for (int i = 0; i < size; i++)
         solution[i] = {i, NULL, INT_MAX};
     solution[startVertex].d_or_key = 0;
@@ -19,7 +19,7 @@ void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
     while (queue->getSize() > 0) {
         auto u = queue->getMin().id;
         auto number = matrix->getNumberOfNeighbours(u);
-        auto *neighbours = new PrimDijkstra[number];
+        auto *neighbours = new GraphAlgorithmStructure[number];
         for (int i = 0, j = 0; j < number; i++) {
             if (matrix->getData(u, i) != INT_MAX)
                 neighbours[j++] = solution[i];
@@ -30,7 +30,7 @@ void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
             if (compare > relaxation) {
                 solution[neighbours[i].id].d_or_key = relaxation;
                 solution[neighbours[i].id].p = u;
-                queue->setData(neighbours[i].id, PrimDijkstra{neighbours[i].id, u, relaxation});
+                queue->setData(neighbours[i].id, GraphAlgorithmStructure{neighbours[i].id, u, relaxation});
             }
         }
         queue->remove();
@@ -50,7 +50,7 @@ void DijkstraAlgorithm::solve(AdjacencyMatrix *matrix, int startVertex) {
 
 void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
     auto size = list->getSize();
-    auto *solution = new PrimDijkstra[size];
+    auto *solution = new GraphAlgorithmStructure[size];
     for (int i = 0; i < size; i++)
         solution[i] = {i, NULL, INT_MAX};
     solution[startVertex].d_or_key = 0;
@@ -58,7 +58,7 @@ void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
     while (queue->getSize() > 0) {
         auto u = queue->getMin().id;
         auto number = list->getNumberOfNeighbours(u);
-        auto *neighbours = new PrimDijkstra[number];
+        auto *neighbours = new GraphAlgorithmStructure[number];
         for (int i = 0, j = 0; j < number; i++) {
             if (list->getData(u, i) != INT_MAX)
                 neighbours[j++] = solution[i];
@@ -69,7 +69,7 @@ void DijkstraAlgorithm::solve(AdjacencyList *list, int startVertex) {
             if (compare > relaxation) {
                 solution[neighbours[i].id].d_or_key = relaxation;
                 solution[neighbours[i].id].p = u;
-                queue->setData(neighbours[i].id, PrimDijkstra{neighbours[i].id, u, relaxation});
+                queue->setData(neighbours[i].id, GraphAlgorithmStructure{neighbours[i].id, u, relaxation});
             }
         }
         queue->remove();
@@ -94,7 +94,7 @@ bool DijkstraAlgorithm::inSequence(int id, const int *sequence, int size) {
     return false;
 }
 
-void DijkstraAlgorithm::solutionSequence(PrimDijkstra *array, int size, int startVertex) {
+void DijkstraAlgorithm::solutionSequence(GraphAlgorithmStructure *array, int size, int startVertex) {
     auto *sequence = new int[size];
     for (int i = 0; i < size; i++)
         sequence[i] = INT_MAX;

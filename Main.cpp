@@ -6,6 +6,7 @@
 #include "adjacency_list/AdjacencyList.h"
 #include "dijkstra_algorithm/DijkstraAlgorithm.h"
 #include "prim_algorithm/PrimAlgorithm.h"
+#include "bellman-ford_algorithm/BellmanFordAlgorithm.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -157,7 +158,7 @@ int main() {
                             }
                             directed = input != 0;
                             KPUnavailable = input != 0;
-                            matrix = new AdjacencyMatrix(size, true, directed, density, minWeight, maxWeight);
+                            matrix = new AdjacencyMatrix(size, directed, density, minWeight, maxWeight);
                             list = new AdjacencyList(matrix);
                             algorithm = true;
                             cout << "Graph generation successful." << endl;
@@ -253,6 +254,13 @@ int main() {
                             case 5: {
                                 if (KPUnavailable || load) {
                                     cout << headlines[input] << endl;
+                                    auto initialVertex = load ? matrix->getInitialVertex() : getInitialVertex();
+                                    auto response = BellmanFordAlgorithm::solve(matrix, initialVertex);
+                                    if (response)
+                                        cout << "There are not any negative cycles." << endl;
+                                    else
+                                        cout << "Error! There is at least one negative cycle in the graph" << endl;
+
                                 } else
                                     undirectedGraphError();
                             }
@@ -260,6 +268,12 @@ int main() {
                             case 6: {
                                 if (KPUnavailable || load) {
                                     cout << headlines[input] << endl;
+                                    auto initialVertex = load ? list->getInitialVertex() : getInitialVertex();
+                                    auto response = BellmanFordAlgorithm::solve(list, initialVertex);
+                                    if (response)
+                                        cout << "There are not any negative cycles." << endl;
+                                    else
+                                        cout << "Error! There is at least one negative cycle in the graph" << endl;
                                 } else
                                     undirectedGraphError();
                             }
@@ -307,8 +321,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
@@ -322,8 +336,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 PrimAlgorithm::solve(list, (int) parameters[2]);
@@ -338,8 +352,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
                                 DijkstraAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
@@ -353,8 +367,8 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
                                 DijkstraAlgorithm::solve(list, (int) parameters[2]);
@@ -368,14 +382,17 @@ int main() {
                         case 5: {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                            for (int i = 0; i < parameters[4];) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
-                                // todo: plug algorithm in
+                                auto tmp = BellmanFordAlgorithm::solve(matrix, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
+                                if (tmp) {
+                                    save(time, filepaths[input]);
+                                    i++;
+                                }
                             }
                             delete parameters;
                         }
@@ -383,15 +400,18 @@ int main() {
                         case 6: {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, true,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                            for (int i = 0; i < parameters[4];) {
+                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
-                                //todo:plug algorithm in here
+                                auto tmp = BellmanFordAlgorithm::solve(list, (int) parameters[2]);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
+                                if (tmp) {
+                                    save(time, filepaths[input]);
+                                    i++;
+                                }
                             }
                             delete parameters;
 
@@ -401,10 +421,10 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
-                                PrimAlgorithm::solve(matrix, (int) parameters[2]);
+                                //todo: plug algorithm in here
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
                                 save(time, filepaths[input]);
@@ -417,11 +437,11 @@ int main() {
                             cout << headlines[input] << endl;
                             auto *parameters = getParameters();
                             for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, false,
-                                                             parameters[3], (int) parameters[5], (int) parameters[1]);
+                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
+                                                             (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
-                                PrimAlgorithm::solve(list, (int) parameters[2]);
+                                //todo: plug algorithm in here
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
                                 save(time, filepaths[input]);

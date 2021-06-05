@@ -26,7 +26,7 @@ public:
     AdjacencyMatrix();
 
     //constructor
-    explicit AdjacencyMatrix(int size, bool random, bool directed, double density, int min, int max);
+    explicit AdjacencyMatrix(int size, bool directed, double density, int min, int max);
 
     //constructor loading graph from file
     explicit AdjacencyMatrix(const string &filepath, const string &delimiter, bool directed);
@@ -43,7 +43,7 @@ public:
     //returns square root of the size
     [[nodiscard]] int getSize() const;
 
-    //displays content of the martrix
+    //displays content of the matrix
     void show();
 
     //number of neighbours of given vertex

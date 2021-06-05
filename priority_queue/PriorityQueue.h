@@ -5,7 +5,7 @@
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 
-struct PrimDijkstra {
+struct GraphAlgorithmStructure {
     int id;
     int p;
     int d_or_key;
@@ -14,7 +14,7 @@ struct PrimDijkstra {
 class PriorityQueue {
 private:
     //dynamic dynamic array storing id added to the queue
-    PrimDijkstra *queue;
+    GraphAlgorithmStructure *queue;
     //size of the binary queue
     int size;
 
@@ -25,13 +25,13 @@ public:
     //constructor
     PriorityQueue();
 
-    PriorityQueue(PrimDijkstra *collection, int size);
+    PriorityQueue(GraphAlgorithmStructure *collection, int size);
 
     //destructor
     virtual ~PriorityQueue();
 
     //adds specified id to queue
-    void add(PrimDijkstra item);
+    void add(GraphAlgorithmStructure item);
 
     //removes the root of the queue
     void remove();
@@ -46,10 +46,10 @@ public:
     [[nodiscard]] int getSize() const;
 
     //returns element with minimum d or minimum key
-    PrimDijkstra getMin();
+    GraphAlgorithmStructure getMin();
 
     //sets specified element in the queue
-    void setData(int id, PrimDijkstra primDijkstra);
+    void setData(int id, GraphAlgorithmStructure primDijkstra);
 
     //returns true if vertex with given ID is in the queue
     bool contains(int id);

@@ -9,14 +9,15 @@
 
 using namespace std;
 
-AdjacencyMatrix::AdjacencyMatrix(int size, bool random, bool directed, double density, int min, int max) {
+AdjacencyMatrix::AdjacencyMatrix(int size, bool directed, double density, int min, int max) {
     this->size = size;
     this->matrix = nullptr;
+    initialVertex = 0;
     initializeMatrix(size);
     auto edges_max = ((double) size * ((double) size - 1.0)) / 2.0;
     auto edges_min = (double) size - 1.0;
     double tmp = directed ? (edges_min * 0.5) / edges_max : edges_min / edges_max;
-    if (density >= edges_min / edges_max && random) {
+    if (density >= edges_min / edges_max) {
         //consistent graph
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
