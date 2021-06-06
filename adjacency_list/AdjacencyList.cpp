@@ -13,6 +13,7 @@ using namespace std;
 AdjacencyList::AdjacencyList() {
     size = 0;
     initialVertex = 0;
+    edges = 0;
     first = nullptr;
     last = nullptr;
 }
@@ -97,16 +98,6 @@ void AdjacencyList::removeNeighbours(Vertex *vertex) {
     }
 }
 
-Vertex *AdjacencyList::containsVertex(int id) {
-    auto *tmp = first;
-    while (tmp != nullptr) {
-        if (tmp->getID() == id)
-            return tmp;
-        tmp = tmp->getNext();
-    }
-    return nullptr;
-}
-
 AdjacencyList::~AdjacencyList() {
     removeAll();
 }
@@ -142,6 +133,7 @@ AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bo
     // parameters[2]-start
     // parameters[3]-end
     int *parameters = interpret(tmp, delimiter, 4);
+    edges = parameters[0];
     initialVertex = parameters[2];
     for (int i = 0; i < parameters[1]; i++)
         addVertex(i);
@@ -160,7 +152,8 @@ AdjacencyList::AdjacencyList(const string &filepath, const string &delimiter, bo
 }
 
 AdjacencyList::AdjacencyList(AdjacencyMatrix *matrix) {
-    this->size = 0;
+    size = 0;
+    edges = matrix->getEdges();
     first = nullptr;
     last = nullptr;
     initialVertex = matrix->getInitialVertex();
@@ -189,7 +182,7 @@ int AdjacencyList::getNumberOfNeighbours(int id) {
     return neighbours;
 }
 
-int AdjacencyList::getData(int vertexID, int neighbourID) {
+int AdjacencyList::getData(int vertexID, int neighbourID) const {
     auto *tmp = first;
     while (tmp->getID() != vertexID)
         tmp = tmp->getNext();
@@ -204,6 +197,21 @@ int AdjacencyList::getData(int vertexID, int neighbourID) {
 
 int AdjacencyList::getInitialVertex() const {
     return initialVertex;
+}
+
+int AdjacencyList::getEdges() const {
+    return edges;
+}
+
+int AdjacencyList::getMaxWeight() const {
+    auto max=0;
+    for(int j=0;j<size-1;j++)
+        for (int k = j+1; k < size; k++) {
+            auto tmp= getData(j,k);
+            if(tmp!=INT_MAX&&tmp>max)
+                max=tmp;
+        }
+    return max;
 }
 
 

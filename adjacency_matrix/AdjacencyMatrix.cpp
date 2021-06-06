@@ -16,6 +16,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool directed, double density, int mi
     initializeMatrix(size);
     auto edges_max = ((double) size * ((double) size - 1.0)) / 2.0;
     auto edges_min = (double) size - 1.0;
+    this->edges = (int) edges_min;
     double tmp = directed ? (edges_min * 0.5) / edges_max : edges_min / edges_max;
     if (density >= edges_min / edges_max) {
         //consistent graph
@@ -37,6 +38,7 @@ AdjacencyMatrix::AdjacencyMatrix(int size, bool directed, double density, int mi
                 auto random_weight = random_number(min, max);
                 setData(random_weight, random_row, random_column);
                 tmp += 0.5 / edges_max;
+                this->edges++;
                 if (!directed) {
                     tmp += 0.5 / edges_max;
                     setData(random_weight, random_column, random_row);
@@ -72,6 +74,8 @@ AdjacencyMatrix::~AdjacencyMatrix() {
     delete[] matrix;
     matrix = nullptr;
     size = 0;
+    initialVertex=0;
+    edges=0;
 }
 
 int AdjacencyMatrix::getSize() const {
@@ -86,6 +90,7 @@ AdjacencyMatrix::AdjacencyMatrix(const string &filepath, const string &delimiter
     getline(file, tmp);
     //parameters[0]-edges parameters[1]-vertexes parameters[2]-start parameters[3]-end
     int *parameters = interpret(tmp, delimiter, 4);
+    this->edges = parameters[0];
     this->size = parameters[1];
     this->initialVertex = parameters[2];
     initializeMatrix(parameters[1]);
@@ -113,6 +118,7 @@ void AdjacencyMatrix::initializeMatrix(int matrixSize) {
 AdjacencyMatrix::AdjacencyMatrix() {
     size = 0;
     initialVertex = 0;
+    edges = 0;
     matrix = nullptr;
 }
 
@@ -126,4 +132,17 @@ int AdjacencyMatrix::getNumberOfNeighbours(int vertexID) const {
 
 int AdjacencyMatrix::getInitialVertex() const {
     return initialVertex;
+}
+
+int AdjacencyMatrix::getMaxWeight() const {
+    auto max = 0;
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++)
+            if (matrix[i][j] != INT_MAX && matrix[i][j] > max)
+                max = matrix[i][j];
+    return max;
+}
+
+int AdjacencyMatrix::getEdges() const {
+    return edges;
 }

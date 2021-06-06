@@ -15,8 +15,10 @@ class AdjacencyMatrix {
 private:
     //dynamic two-dimensional array containing id
     int **matrix;
-    //size*size is the actual size of matrix
+    //number of vertexes
     int size;
+    //number of edges
+    int edges;
     //initial vertex
     int initialVertex;
     //initialises matrix
@@ -50,6 +52,10 @@ public:
     [[nodiscard]] int getNumberOfNeighbours(int vertexID) const;
 
     [[nodiscard]] int getInitialVertex() const;
+
+    [[nodiscard]] int getMaxWeight() const;
+
+    [[nodiscard]] int getEdges() const;
 
 };
 

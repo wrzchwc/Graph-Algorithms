@@ -10,12 +10,15 @@
 #include "Vertex.h"
 #include "../adjacency_matrix/AdjacencyMatrix.h"
 
+
 using namespace std;
 
 class AdjacencyList {
 private:
     //number of vertexes in the list
     int size;
+    //number of edges in the list
+    int edges;
     //initial vertex
     int initialVertex;
     //first vertex in the list
@@ -44,9 +47,6 @@ public:
     //destructor
     virtual ~AdjacencyList();
 
-    //returns pointer to containsVertex with specified id on the list, otherwise returns nullptr
-    Vertex *containsVertex(int id);
-
     //adds new containsVertex
     void addVertex(int id);
 
@@ -69,10 +69,16 @@ public:
     int getNumberOfNeighbours(int id);
 
     //returns weight of specified edge
-    int getData(int vertexID, int neighbourID);
+    int getData(int vertexID, int neighbourID) const;
 
     //returns initial vertex of the graph
     [[nodiscard]] int getInitialVertex() const;
+
+    //returns number of edges
+    [[nodiscard]] int getEdges() const;
+
+    //returns maximum weight of edge
+    [[nodiscard]] int getMaxWeight() const;
 };
 
 

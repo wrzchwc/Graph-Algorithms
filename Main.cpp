@@ -6,7 +6,7 @@
 #include "adjacency_list/AdjacencyList.h"
 #include "dijkstra_algorithm/DijkstraAlgorithm.h"
 #include "prim_algorithm/PrimAlgorithm.h"
-#include "bellman-ford_algorithm/BellmanFordAlgorithm.h"
+#include "kruskal_algorithm/KruskalAlgorithm.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -281,6 +281,7 @@ int main() {
                             case 7: {
                                 if (!KPUnavailable || load) {
                                     cout << headlines[input] << endl;
+                                    KruskalAlgorithm::solve(matrix);
                                 } else
                                     directedGraphError();
                             }
@@ -288,6 +289,7 @@ int main() {
                             case 8: {
                                 if (!KPUnavailable || load) {
                                     cout << headlines[input] << endl;
+                                    KruskalAlgorithm::solve(list);
                                 } else
                                     directedGraphError();
                             }
@@ -424,7 +426,7 @@ int main() {
                                 matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
                                                              (int) parameters[5], (int) parameters[1]);
                                 auto start = steady_clock::now();
-                                //todo: plug algorithm in here
+                                KruskalAlgorithm::solve(matrix);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
                                 save(time, filepaths[input]);
@@ -441,7 +443,7 @@ int main() {
                                                              (int) parameters[5], (int) parameters[1]);
                                 list = new AdjacencyList(matrix);
                                 auto start = steady_clock::now();
-                                //todo: plug algorithm in here
+                                KruskalAlgorithm::solve(list);
                                 auto end = steady_clock::now();
                                 time = double(duration_cast<nanoseconds>(end - start).count());
                                 save(time, filepaths[input]);
