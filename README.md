@@ -23,7 +23,6 @@ where:
 Furthermore:
 - vertexes should be indexed steady from 0
 - all numbers should be separated with the delimiter of " " (single space)
-- there must be single empty line after data of the last edge
 - source file should be located in the same location as executable file 
 
 

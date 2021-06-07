@@ -12,9 +12,7 @@
 class DijkstraAlgorithm {
 private:
     //co-functions for printing the solution
-    static void solutionSequence(GraphAlgorithmStructure *array, int size, int startVertex);
-
-    static bool inSequence(int id, const int *sequence, int size);
+    static void solutionSequence(GraphAlgorithmStructure *solution, int size, int startVertex);
 
 public:
     //constructor

@@ -27,14 +27,12 @@ bool BellmanFordAlgorithm::solve(AdjacencyList *list, int initialVertex) {
                 if (dv > du + w)
                     return false;
             }
-    cout << "Solution: " << endl;
     auto shortest_path = 0;
     for (int i = 0; i < size; i++) {
-        cout << "vertex: " << solution[i].id << " distance: " << solution[i].d_or_key << endl;
         if (i != initialVertex)
             shortest_path += list->getData(solution[i].p, solution[i].id);
     }
-    solutionSequence(solution, size, initialVertex);
+    DijkstraAlgorithm::solutionSequence(solution, size, initialVertex);
     cout << "Shortest path: " << shortest_path << endl;
     delete[] solution;
     return true;
@@ -68,35 +66,14 @@ bool BellmanFordAlgorithm::solve(AdjacencyMatrix *matrix, int initialVertex) {
                     return false;
             }
 
-    cout << "Solution: " << endl;
     auto shortest_path = 0;
-    for (int i = 0; i < size; i++) {
-        cout << "vertex: " << solution[i].id << " distance: " << solution[i].d_or_key << endl;
+    for (int i = 0; i < size; i++)
         if (i != initialVertex)
             shortest_path += matrix->getData(solution[i].p, solution[i].id);
-    }
+    DijkstraAlgorithm::solutionSequence(solution, size, initialVertex);
     cout << "Shortest path: " << shortest_path << endl;
-    solutionSequence(solution, size, initialVertex);
     delete[] solution;
     return true;
-}
-
-void BellmanFordAlgorithm::solutionSequence(GraphAlgorithmStructure *array, int size, int initialVertex) {
-    auto *sequence = new int[size];
-    sequence[0] = initialVertex;
-    auto tmp = array[initialVertex];
-    auto previous = initialVertex;
-    for (int i = 1; i < size;) {
-        for (int j = 0; j < size; j++)
-            if (j != initialVertex && array[j].p == previous) {
-                sequence[i++] = j;
-                tmp = array[j];
-            }
-        previous = tmp.id;
-    }
-    for (int i = 0; i < size; i++)
-        cout << sequence[i] << " ";
-    cout << endl;
 }
 
 

@@ -9,8 +9,6 @@
 #include "../adjacency_matrix/AdjacencyMatrix.h"
 
 class BellmanFordAlgorithm {
-private:
-    static void solutionSequence(GraphAlgorithmStructure *array, int size, int initialVertex);
 public:
     //constructor
     BellmanFordAlgorithm();

@@ -70,7 +70,7 @@ double *getParameters() {
     cout << "Maximum edge weight: ";
     cin >> parameters[1];
     cout << "Minimum edge weight: ";
-    cin >> parameters[6];
+    cin >> parameters[5];
     cout << "Starting vertex: ";
     cin >> parameters[2];
     cout << "Density: ";
@@ -93,6 +93,10 @@ string headlines[9] = {"[0] Return to menu",
 string filepaths[8] = {"prim_matrix.txt", "prim_list.txt", "dijkstra_matrix.txt", "dijkstra_list.txt",
                        "bellman-ford_matrix.txt", "bellman-ford_list.txt", "kruskal_matrix.txt", "kruskal_list.txt"
 };
+
+double densities[4] = {0.25, 0.5, 0.75, 0.99};
+
+int sizes[5] = {30, 60, 90, 120, 150};
 
 void printAlgorithms() {
     for (const string &headline:headlines)
@@ -125,7 +129,7 @@ int main() {
                     // path to the file, where graph parameters are stored
                     string filepath, delimiter = " ";
                     bool load = false, KPUnavailable = false;
-                    int minWeight;
+                    int minWeight = 0;
                     cout << "[0] Return to menu" << endl;
                     cout << "[1] Generate graph" << endl;
                     cout << "[2] Load graph from the file" << endl;
@@ -310,7 +314,7 @@ int main() {
                 auto *matrix = new AdjacencyMatrix();
                 auto *list = new AdjacencyList();
                 while (mode) {
-                    double time;
+                    double time = 0.0;
                     cout << "--------------------------------Metrological mode--------------------------------" << endl;
                     printAlgorithms();
                     cin >> input;
@@ -321,134 +325,129 @@ int main() {
                             break;
                         case 1: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                auto start = steady_clock::now();
-                                PrimAlgorithm::solve(matrix, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
+                            for (int size:sizes) {
+                                for (double density:densities) {
+                                    for (int i = 0; i < 100; i++) {
+                                        matrix = new AdjacencyMatrix(size, false, density, 1, 1000);
+                                        auto start = steady_clock::now();
+                                        PrimAlgorithm::solve(matrix, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
+                                }
                             }
-                            delete parameters;
+
                         }
                             break;
                         case 2: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                list = new AdjacencyList(matrix);
-                                auto start = steady_clock::now();
-                                PrimAlgorithm::solve(list, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
+                            for (int size:sizes) {
+                                for (double density : densities) {
+                                    for (int k = 0; k < 100; k++) {
+                                        matrix = new AdjacencyMatrix(size, false, density, 1, 1000);
+                                        list = new AdjacencyList(matrix);
+                                        auto start = steady_clock::now();
+                                        PrimAlgorithm::solve(list, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
+                                }
                             }
-                            delete parameters;
                         }
                             break;
                         case 3: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                auto start = steady_clock::now();
-                                DijkstraAlgorithm::solve(matrix, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
-                            }
-                            delete parameters;
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100; i++) {
+                                        matrix = new AdjacencyMatrix(size, true, density, 1, 1000);
+                                        auto start = steady_clock::now();
+                                        DijkstraAlgorithm::solve(matrix, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
                         }
                             break;
                         case 4: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                list = new AdjacencyList(matrix);
-                                auto start = steady_clock::now();
-                                DijkstraAlgorithm::solve(list, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
-                            }
-                            delete parameters;
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100; i++) {
+                                        matrix = new AdjacencyMatrix(size, true, density, 1, 1000);
+                                        list = new AdjacencyList(matrix);
+                                        auto start = steady_clock::now();
+                                        DijkstraAlgorithm::solve(list, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
                         }
                             break;
                         case 5: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4];) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                auto start = steady_clock::now();
-                                auto tmp = BellmanFordAlgorithm::solve(matrix, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                if (tmp) {
-                                    save(time, filepaths[input]);
-                                    i++;
-                                }
-                            }
-                            delete parameters;
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100;) {
+                                        matrix = new AdjacencyMatrix(size, true, density, 1, 1000);
+                                        auto start = steady_clock::now();
+                                        auto tmp = BellmanFordAlgorithm::solve(matrix, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        if (tmp) {
+                                            save(time, filepaths[input - 1]);
+                                            i++;
+                                        }
+                                    }
                         }
                             break;
                         case 6: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4];) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], true, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                list = new AdjacencyList(matrix);
-                                auto start = steady_clock::now();
-                                auto tmp = BellmanFordAlgorithm::solve(list, (int) parameters[2]);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                if (tmp) {
-                                    save(time, filepaths[input]);
-                                    i++;
-                                }
-                            }
-                            delete parameters;
-
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100;) {
+                                        matrix = new AdjacencyMatrix(size, true, density, 1, 1000);
+                                        list = new AdjacencyList(matrix);
+                                        auto start = steady_clock::now();
+                                        auto tmp = BellmanFordAlgorithm::solve(list, 0);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        if (tmp) {
+                                            save(time, filepaths[input - 1]);
+                                            i++;
+                                        }
+                                    }
                         }
                             break;
                         case 7: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                auto start = steady_clock::now();
-                                KruskalAlgorithm::solve(matrix);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
-                            }
-                            delete parameters;
-
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100; i++) {
+                                        matrix = new AdjacencyMatrix(size, false, density, 1, 1000);
+                                        auto start = steady_clock::now();
+                                        KruskalAlgorithm::solve(matrix);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
                         }
                             break;
                         case 8: {
                             cout << headlines[input] << endl;
-                            auto *parameters = getParameters();
-                            for (int i = 0; i < parameters[4]; i++) {
-                                matrix = new AdjacencyMatrix((int) parameters[0], false, parameters[3],
-                                                             (int) parameters[5], (int) parameters[1]);
-                                list = new AdjacencyList(matrix);
-                                auto start = steady_clock::now();
-                                KruskalAlgorithm::solve(list);
-                                auto end = steady_clock::now();
-                                time = double(duration_cast<nanoseconds>(end - start).count());
-                                save(time, filepaths[input]);
-                            }
-                            delete parameters;
+                            for (int size:sizes)
+                                for (double density : densities)
+                                    for (int i = 0; i < 100; i++) {
+                                        matrix = new AdjacencyMatrix(size, false, density, 1, 1000);
+                                        list = new AdjacencyList(matrix);
+                                        auto start = steady_clock::now();
+                                        KruskalAlgorithm::solve(list);
+                                        auto end = steady_clock::now();
+                                        time = double(duration_cast<nanoseconds>(end - start).count());
+                                        save(time, filepaths[input - 1]);
+                                    }
                         }
                             break;
                         default: {
